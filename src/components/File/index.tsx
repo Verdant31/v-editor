@@ -14,7 +14,6 @@ export function File({name, previusCode } : FileProps) {
 
   return (
     <div className="w-full px-12 m-auto ">
-      <h1>{name}</h1>
       <CodeMirror
         value={code}
         placeholder="Start coding..."

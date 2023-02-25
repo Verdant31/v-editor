@@ -14,6 +14,7 @@
     "@uiw/react-codemirror": "^4.19.9",
     "@webcontainer/api": "^1.0.2",
     "ansi-to-html": "^0.7.2",
+    "jotai": "^2.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

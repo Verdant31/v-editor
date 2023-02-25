@@ -1,15 +1,25 @@
 import ANSIToHTML from 'ansi-to-html';
-import { useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai/react';
+import { useEffect, useState } from 'react';
 import { getWebContainerInstance } from '../../lib/webContainer';
+import { filesAtom } from '../../store/files';
+import { fetchAndUpdateFile } from '../../store/files/utils';
 import './styles.css';
-import { initialCode } from './utils';
 
 const ANSIConverter = new ANSIToHTML()
 
-export function useNewFile() {
-  const [code, setCode] = useState(initialCode)
-  const [output, setOutput] = useState<string[]>([])
+interface useNewFile {
+  previusCode: string;
+  name: string;
+}
 
+export function useNewFile({ previusCode, name }: useNewFile) {
+  const setFile = useSetAtom(filesAtom);
+  const files = useAtomValue(filesAtom);
+  
+  const [code, setCode] = useState(previusCode)
+  const [output, setOutput] = useState<string[]>([])
+  
   const handleRunCode =  async () => {
     const webContainer = await getWebContainerInstance()
 
@@ -64,6 +74,10 @@ export function useNewFile() {
       }),
     )
   }
+
+  useEffect(() => {
+    fetchAndUpdateFile({ files, setFile, code, fileName: name });
+  },[output])
 
   return {
     code,

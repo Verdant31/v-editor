@@ -4,11 +4,17 @@ import CodeMirror from "@uiw/react-codemirror";
 import './styles.css';
 import { useNewFile } from './useNewFile';
 
-export function NewFile() {
-  const { code, handleRunCode, output, setCode } = useNewFile();
-  
+interface FileProps {
+  name: string;
+  previusCode: string;
+}
+
+export function File({name, previusCode } : FileProps) {
+  const { code, handleRunCode, output, setCode } = useNewFile({previusCode, name});
+
   return (
     <div className="w-full px-12 m-auto ">
+      <h1>{name}</h1>
       <CodeMirror
         value={code}
         placeholder="Start coding..."

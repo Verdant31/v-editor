@@ -1,84 +1,12 @@
 import { javascript } from '@codemirror/lang-javascript';
 import { dracula } from '@uiw/codemirror-theme-dracula';
 import CodeMirror from "@uiw/react-codemirror";
-import ANSIToHTML from 'ansi-to-html';
-import { useState } from 'react';
-import { getWebContainerInstance } from '../../lib/webContainer';
 import './styles.css';
-
-const initialCode = [
-  `import 'isomorphic-fetch';`,
-  ``,
-  `const fetchRepositories = async () => {
-    await fetch("https://api.github.com/users/verdant31/repos?page=1&per_page=5")
-      .then(res => res.json())
-      .then(res => console.log(res))
-  }`,
-  ``,
-  `fetchRepositories();`,
-].join('\n')
-
-const ANSIConverter = new ANSIToHTML()
+import { useNewFile } from './useNewFile';
 
 export function NewFile() {
-  const [code, setCode] = useState(initialCode)
-  const [output, setOutput] = useState<string[]>([])
-
-  const handleRunCode =  async () => {
-    const webContainer = await getWebContainerInstance()
-
-    await webContainer.mount({
-      'index.js': {
-        file: {
-          contents: code,
-        },
-      },
-      'package.json': {
-        file: {
-          contents: `
-            {
-              "name": "example-app",
-              "type": "module",
-              "dependencies": {
-                "chalk": "latest",
-                "isomorphic-fetch": "latest"
-              },
-              "scripts": {
-                "start": "node index.js"
-              }
-            }
-          `.trim(),
-        },
-      },
-    })
-
-    const install = await webContainer.spawn('pnpm', ['i'], {
-      output: false,
-    })
-    setOutput(['🔥 Installing dependencies!'])
-
-    install.output.pipeTo(
-      new WritableStream({
-        write(data) {
-          setOutput((state) => [...state, ANSIConverter.toHtml(data)])
-        },
-      }),
-    )
-    await install.exit
-
-    setOutput((state) => [...state, '---------', '🚀 Running the application!'])
-
-    const start = await webContainer.spawn('pnpm', ['start'])
-
-    start.output.pipeTo(
-      new WritableStream({
-        write(data) {
-          setOutput((state) => [...state, ANSIConverter.toHtml(data)])
-        },
-      }),
-    )
-  }
-
+  const { code, handleRunCode, output, setCode } = useNewFile();
+  
   return (
     <div className="w-full px-12 m-auto ">
       <CodeMirror

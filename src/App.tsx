@@ -1,19 +1,11 @@
-import { useAtomValue } from "jotai";
-import { File } from "./components/File";
-import { filesAtom } from "./store/files";
+import { BrowserRouter } from "react-router-dom";
+import { Router } from "./routes";
 
-export default function Home() {
-  const files = useAtomValue(filesAtom);
-  const current = files.find((file) => file.current);
-  
-  if(!current) return <h1>Loading...</h1>
+export default function App() {
 
   return (
-    <main className="mt-24">
-      {files.map((file) => (
-        <h1 key={file.name}>{file.name}</h1>
-      ))}
-      <File name={current.name} previusCode={current.code} />
-    </main>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   )
 }

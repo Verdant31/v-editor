@@ -14,9 +14,14 @@
     "@uiw/react-codemirror": "^4.19.9",
     "@webcontainer/api": "^1.0.2",
     "ansi-to-html": "^0.7.2",
+    "framer-motion": "^10.0.0",
     "jotai": "^2.0.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
+    "react-simple-typewriter": "^5.0.1",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

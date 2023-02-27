@@ -11,8 +11,6 @@
   body {
     background: #191622;
     color: #fff;
-  }
-  h1 {
-    font-family: 'PT Serif', serif;
+    font-family: 'Inter', serif;
   }
 }

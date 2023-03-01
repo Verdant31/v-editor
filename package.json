@@ -19,6 +19,7 @@
     "interactjs": "^1.10.17",
     "jotai": "^2.0.2",
     "phosphor-react": "^1.4.1",
+    "re-resizable": "^6.9.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-resizable": "^3.0.4",

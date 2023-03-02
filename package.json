@@ -25,6 +25,7 @@
     "react-resizable": "^3.0.4",
     "react-router-dom": "^6.8.1",
     "react-simple-typewriter": "^5.0.1",
+    "react-spinners": "^0.13.8",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1"
   },

@@ -7,7 +7,7 @@ interface BrowserProps {
   setAppUrl: (value: string) => void;
 }
 
-export default function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
+export function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
   return (
     <div className="bg-[#202024]">
         <div className="h-12 bg-[#151518] flex items-center justify-center ">

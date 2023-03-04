@@ -22,12 +22,15 @@
     "re-resizable": "^6.9.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-frame-component": "^5.2.6",
     "react-resizable": "^3.0.4",
     "react-router-dom": "^6.8.1",
     "react-simple-typewriter": "^5.0.1",
     "react-spinners": "^0.13.8",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "xterm": "^5.1.0",
+    "xterm-addon-fit": "^0.7.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

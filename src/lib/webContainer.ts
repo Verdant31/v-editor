@@ -1,4 +1,4 @@
-import { WebContainer } from '@webcontainer/api'
+import { WebContainer } from '@webcontainer/api';
 
 let webContainerInstance: WebContainer
 

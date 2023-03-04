@@ -1,127 +1,120 @@
+/** @type {import('@webcontainer/api').FileSystemTree} */
 
-export const tree = {
+export const viteTree = {
   src: {
     directory: {
-      'index.js': {
+      'App.tsx': {
         file: {
           contents: `
-            import { render } from 'react-dom';
-            import { App } from './App';
-            
-            render(<App />, document.getElementById('root'));
-          `
+          import React from 'react';
+          function App() {
+            return (
+              <div className="App">
+                <p>opa fion</p>
+              </div>
+            )
+          }
+          export default App`
         },
       },
-      'App.js': {
+      'main.tsx': {
         file: {
-          contents: `import React from 'react';
-
-          export function App() {
-            return (
-              <div>
-                <h1>Hello World</h1>
-              </div>
-            );
-          }
+          contents: `
+          import React from 'react'
+          import ReactDOM from 'react-dom/client'
+          import App from './App'
+          ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+            <App />
+          )
           `
         }
       }
     }
   },
-  public: {
-    directory: {
-      'index.html': {
-        file: {
-          contents: `
-          <!DOCTYPE html>
-          <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <meta http-equiv="X-UA-Compatible" content="IE=edge">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Document</title>
-            </head>
-            <body>
-              <div id="root"></div>
-            </body>
-          </html>
-          ` 
-        },
-      }
-    }
-  },
-  'babel.config.json': {
+  'index.html': {
     file: {
-      contents: `module.exports = {
-        presets: [
-          "@babel/preset-env", 
-          ["@babel/preset-react",
-          {
-            runtime: "automatic"
-          }]
-        ]
-      }`,
-    }
-  },
-  'webpack.config.js': {
-    file: {
-      contents: `
-      const path = require('path');
-      const HtmlWebpackPlugin = require('html-webpack-plugin');
-      
-      module.exports = {
-        mode: 'development',
-        entry: path.resolve(__dirname, 'src', 'index.js'),
-        output: {
-          path: path.resolve(__dirname, 'dist'),
-          filename: 'bundle.js',
-        },
-        resolve: {
-          extensions: ['.js', '.jsx'],
-        },
-        plugins:[
-          new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'public', 'index.html'),
-          })
-        ],
-        devServer: {
-          static: path.resolve(__dirname, 'public')
-        },
-        module: {
-          rules: [
-            {
-              test: /\.js$/,
-              exclude: /node_modules/,
-              use: 'babel-loader', 
-            }
-          ]
-        }
-      }
-      `.trim(),
+      contents: `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vite App</title>
+      </head>
+      <body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.tsx"></script>
+      </body>
+      </html>
+      `,
     }
   },
   'package.json': {
     file: {
-      contents: `
-        {
-          "name": "example-app",
-          "license": "MIT",
-          "dependencies": {
-            "react": "latest",
-            "react-dom": "latest",
-            "@babel/cli": "latest",
-            "@babel/core": "latest",
-            "@babel/preset-env": "latest",
-            "@babel/preset-react": "latest",
-            "babel-loader": "latest",
-            "webpack-cli": "latest",
-            "webpack-dev-server": "latest"
-          },
-          "scripts": {
-            "start": "webpack serve --config webpack.config.js"
-          }
+      contents: `{
+        "name": "myapp",
+        "version": "0.0.0",
+        "scripts": {
+          "dev": "vite",
+          "build": "tsc && vite build"
+        },
+        "dependencies": {
+          "react": "latest",
+          "react-dom": "latest"
+        },
+        "devDependencies": {
+          "@types/react": "latest",
+          "@types/react-dom": "latest",
+          "typescript": "^4.1.2",
+          "vite": "^1.0.0-rc.13",
+          "vite-plugin-react": "^4.0.0"
         }
-      `.trim(),
+      }
+      `,
+    }
+  },
+  'tsconfig.json': {
+    file: {
+      contents: `
+      {
+        "compilerOptions": {
+          "target": "ESNext",
+          "lib": ["DOM", "DOM.Iterable", "ESNext"],
+          "types": [],
+          "allowJs": false,
+          "skipLibCheck": false,
+          "esModuleInterop": false,
+          "allowSyntheticDefaultImports": true,
+          "strict": true,
+          "forceConsistentCasingInFileNames": true,
+          "module": "ESNext",
+          "moduleResolution": "Node",
+          "resolveJsonModule": true,
+          "isolatedModules": true,
+          "noEmit": true,
+          "jsx": "react"
+        },
+        "include": ["src"]
+      }
+      `
+    },
+  },
+  'vite.config.ts': {
+    file: {
+      contents: `
+      import * as reactPlugin from 'vite-plugin-react'
+      import type { UserConfig } from 'vite'
+      
+      const config: UserConfig = {
+        jsx: 'react',
+        optimizeDeps: {
+          include: ['react', 'react-dom/client'],
+        },
+        plugins: [reactPlugin]
+      }
+      
+      export default config
+      
+      `
     },
   },
 };

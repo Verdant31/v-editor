@@ -1,57 +1,42 @@
-import ANSIToHTML from 'ansi-to-html';
+import { atom, useAtom } from 'jotai';
 import { useEffect, useState } from "react";
+import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
+import { startShell } from './projectFunctions';
 
-const ANSIConverter = new ANSIToHTML()
+export const terminalAtom = atom<Terminal | null>(null);
+const fitAddon = new FitAddon();
 
 export function useProject() {
-  const [output, setOutput] = useState<string[]>([])
-  const [ projectIsRunning, setProjectIsRunning ] = useState(false)
-  const [ appUrl, setAppUrl ] = useState<string>()
+  const [ terminalInstance, setTerminalInstance ] = useAtom(terminalAtom);
+  const [ appUrl , setAppUrl ] = useState('');
 
-  // useEffect(() => {
-  //   if(!projectIsRunning) handleRunProject();
-  // },[])
-
+  const updateAppUrl = (url: string) => setAppUrl(url);
+  
   useEffect(() => {
-    setAppUrl(output.find((line) => line.includes('🌎 Address: '))?.split('🌎 Address: ')[1])
-  },[output])
-
-  // const handleRunProject = async () => {
-  //   const webContainer = await getWebContainerInstance()
-
-  //   const createProject = await webContainer.spawn('npx', ['create-vite-app', '.', '--template=react-ts'], {
-  //     output: false,
-  //   })
+    if(!terminalInstance) {
+      const terminal = new Terminal({
+        convertEol: true,
+        rows: 6,
+        fontFamily: 'JetBrains Mono, monospace',
+        theme: {
+          blue: '#98db9f',
+          magenta: '#98db9f',
+          background: '#202024',
+        },
+      });
+      terminal.loadAddon(fitAddon);
+      fitAddon.fit();
+      setTerminalInstance(terminal);
+      return;
+    }
+    startShell(terminalInstance, updateAppUrl);
     
-  //   setOutput(['🔥 Installing dependecies...'])
-  //   createProject.output.pipeTo(
-  //     new WritableStream({
-  //       write(data) {
-  //         setOutput((state) => [...state, ANSIConverter.toHtml(data)])
-  //       },
-  //     }),
-  //   )
-  //   await createProject.exit
-  //   const install = await webContainer.spawn('npm', ['install'])
-  //   await install.exit;
-    
-  //   await webContainer.spawn('npm', ['run', 'dev'])
-  //   webContainer.on("server-ready", (port, url) => {
-  //     const iframeEl = document.querySelector('iframe');
-  //     (iframeEl as HTMLIFrameElement).src = url;
-  //     setProjectIsRunning(true)
-  //     setOutput((state) => [
-  //       ...state, 
-  //       '🚀 Running the application!', 
-  //       '🌎 Address: ' + url,
-  //     ])
-  //   });
-  // }
+    terminalInstance.open(document.querySelector('.terminal') as HTMLElement);
+  }, [terminalInstance])
 
   return {
-    output,
-    projectIsRunning,
     appUrl,
-    setAppUrl,
+    setAppUrl
   }
 }

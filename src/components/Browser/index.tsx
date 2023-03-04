@@ -1,5 +1,6 @@
 import { Resizable } from 're-resizable';
 import PacmanLoader from "react-spinners/PacmanLoader";
+
 interface BrowserProps {
   projectIsRunning: boolean;
   appUrl: string | undefined;

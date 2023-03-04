@@ -6,9 +6,7 @@ export function Project() {
   const { appUrl, setAppUrl } = useProject();
   return (
     <main className="flex relative justify-between w-[100vw]">
-      <div className="relative w-[100%]">
-        <Terminal  />
-      </div>
+      <Terminal  />
       <Browser
         projectIsRunning={!!appUrl}
         appUrl={appUrl}

@@ -27,12 +27,12 @@ export function useProject() {
       });
       terminal.loadAddon(fitAddon);
       fitAddon.fit();
+      terminal.open(document.querySelector('.terminal') as HTMLElement);
       setTerminalInstance(terminal);
       return;
     }
     startShell(terminalInstance, updateAppUrl);
     
-    terminalInstance.open(document.querySelector('.terminal') as HTMLElement);
   }, [terminalInstance])
 
   return {

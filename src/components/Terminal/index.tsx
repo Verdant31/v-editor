@@ -1,3 +1,4 @@
+import { CaretDown, CaretUp } from 'phosphor-react';
 import { Resizable } from 're-resizable';
 import 'xterm/css/xterm.css';
 import { useTerminal } from './useTerminal';
@@ -12,24 +13,33 @@ const resizableCss : React.CSSProperties = {
 }
 
 export function Terminal() {
-  const { height, setHeight } = useTerminal();
+  const { height, setHeight, isCollapsed, setIsCollapsed } = useTerminal();
 
   return (
-    <Resizable
-      size={{height, width: "100%"}}
-      maxHeight={400}
-      minHeight={200}
-      onResizeStop={(e, direction, ref, d) => {
-        setHeight(height + d.height);
-      }}
-      style={resizableCss}
-      enable={{top: true}}
-    >
-      <h1 className="bg-[#151518] font-monospace p-2 px-4">Terminal</h1>
-      <div style={{height: height - 40, paddingLeft: "20px", paddingTop: "10px"}}>
-        <div className="terminal"></div>
-      </div>
-    </Resizable>
+    <div className="relative w-[100%]">
+      <Resizable
+        size={{height, width: "100%"}}
+        maxHeight={400}
+        onResizeStop={(e, direction, ref, d) => {
+          setHeight(height + d.height);
+        }}
+        style={resizableCss}
+        enable={{top: true}}
+      >
+        <div className="flex justify-between items-center p-2 bg-[#151518]">
+          <h1 className="font-monospace">Terminal</h1>
+          <div onClick={() => setIsCollapsed(!isCollapsed)}>
+            {isCollapsed 
+              ? <CaretUp className="cursor-pointer"  size={24}  />
+              : <CaretDown className="cursor-pointer"  size={24}  /> 
+            }
+          </div>
+        </div>
+        <div id="parent" style={{height: height - 40, paddingLeft: "20px", paddingTop: "10px"}}>
+          <div className="terminal"></div>
+        </div>
+      </Resizable>
+    </div>
   )
 }
        

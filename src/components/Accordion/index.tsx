@@ -28,7 +28,7 @@ export default function FolderAccordion({ title, children, totalLength = 1}: Fol
   const contentHeight = typeof window !== 'undefined' ? (window.innerHeight - totalLength*64) : 0;
 
   return (
-    <Accordion.Item className="AccordionItem" value={title} className="mt-2">
+    <Accordion.Item className="AccordionItem mt-2" value={`${title} ${Math.random()}`}>
       <Accordion.Header >
         <Accordion.Trigger className="flex items-center gap-2 group">
           <Folder 

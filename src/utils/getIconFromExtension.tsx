@@ -12,7 +12,7 @@ export const getIconFromExtension = (name: string) => {
     case 'css': 
       return  <SicssThree size={16} color="#0398e1" />
     case 'ts': 
-      return <Sitypescript size={16} />
+      return <Sitypescript size={16} color="#2f74c0" />
     case 'svg':
       return <Sisvg size={16} color="#bea500"  />
     case 'json':

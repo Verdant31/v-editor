@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.1.4",
+    "@icons-pack/react-simple-icons": "^6.3.0",
+    "@mdi/react": "^1.6.1",
     "@radix-ui/react-accordion": "^1.1.0",
     "@radix-ui/react-icons": "^1.2.0",
     "@uiw/codemirror-theme-dracula": "^4.19.9",

@@ -1,8 +1,8 @@
+import { motion } from 'framer-motion';
 import { CaretDown, CaretUp } from 'phosphor-react';
 import { Resizable } from 're-resizable';
 import 'xterm/css/xterm.css';
 import { useTerminal } from './useTerminal';
-
 const resizableCss : React.CSSProperties = {
   display: "flex", 
   flexDirection: 'column',
@@ -16,7 +16,18 @@ export function Terminal() {
   const { height, setHeight, isCollapsed, setIsCollapsed } = useTerminal();
 
   return (
-    <div className="relative w-[100%]">
+    <motion.div 
+      className="relative w-[100%]"
+      initial={{
+        y: 200,
+      }}
+      transition={{
+        duration: 1
+      }}
+      animate={{
+        y: 0,
+      }}
+    >
       <Resizable
         size={{height, width: "100%"}}
         maxHeight={400}
@@ -39,7 +50,7 @@ export function Terminal() {
           <div className="terminal"></div>
         </div>
       </Resizable>
-    </div>
+    </motion.div>
   )
 }
        

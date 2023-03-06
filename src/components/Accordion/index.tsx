@@ -1,12 +1,6 @@
-import * as Accordion from '@radix-ui/react-accordion';
+import { Disclosure } from '@headlessui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Folder } from 'phosphor-react';
-
-interface FolderAccordionProps {
-  title: string;
-  children: React.ReactNode;
-  totalLength?: number;
-}
 
 const getFolderColor = (folderName: string) => {
   switch(folderName) {
@@ -23,31 +17,41 @@ const getFolderColor = (folderName: string) => {
   }
 }
 
-export default function FolderAccordion({ title, children, totalLength = 1}: FolderAccordionProps) {
 
+interface FolderAccordionProps {
+  title: string;
+  children: React.ReactNode;
+  totalLength?: number;
+  width?: number;
+}
+
+
+export default function FolderAccordion({ title, children, totalLength = 1, width}: FolderAccordionProps) {
   const contentHeight = typeof window !== 'undefined' ? (window.innerHeight - totalLength*64) : 0;
 
   return (
-    <Accordion.Item className="AccordionItem mt-2" value={`${title} ${Math.random()}`}>
-      <Accordion.Header >
-        <Accordion.Trigger className="flex items-center gap-2 group">
-          <Folder 
-            size={24} 
-            weight="fill"
-            color={getFolderColor(title)} 
-          />
-          {title}
-          <ChevronDownIcon
-            className="ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
-            aria-hidden
-          />
-        </Accordion.Trigger>
-      </Accordion.Header>
-      <Accordion.Content style={{maxHeight: contentHeight}} className="overflow-y-scroll">
-        <div className="ml-6 mt-2">
-          {children}
-        </div>
-      </Accordion.Content>
-    </Accordion.Item>
+    <Disclosure>
+      <Disclosure.Button className="flex items-center whitespace-nowrap gap-2 group">
+        <Folder 
+          size={24} 
+          weight="fill"
+          color={getFolderColor(title)} 
+        />
+        <span>{title}</span>
+        <ChevronDownIcon
+          className="ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
+          aria-hidden
+        />
+      </Disclosure.Button>
+      <Disclosure.Panel 
+          style={{maxHeight: contentHeight, width: width as number - 32 }} 
+          className="overflow-y-scroll padding-0"
+      >
+          <div className="ml-4 mb-2">
+            {children}
+          </div>
+      </Disclosure.Panel>
+    </Disclosure>
   )
 }
+

@@ -6,16 +6,20 @@ export const getIconFromExtension = (name: string) => {
 
   switch(extension) {
     case 'js':
-      return <Sijavascript size={16} color="#fcdc00" />
+      return <Sijavascript style={{minWidth: 16, height: 16}} size={16} color="#fcdc00" />
+    case 'mjs':
+      return <Sijavascript style={{minWidth: 16, height: 16}} size={16} color="#fcdc00" />
+    case 'map':
+      return <Sijavascript style={{minWidth: 16, height: 16}} size={16} color="#fcdc00" />
     case 'tsx':
-      return <Sireact size={16} color="#61dafb" />
+      return <Sireact style={{minWidth: 16, height: 16}} size={16} color="#61dafb" />
     case 'css': 
-      return  <SicssThree size={16} color="#0398e1" />
+      return  <SicssThree style={{minWidth: 16, height: 16}} size={16} color="#0398e1" />
     case 'ts': 
-      return <Sitypescript size={16} color="#2f74c0" />
+      return <Sitypescript style={{minWidth: 16, height: 16}} size={16} color="#2f74c0" />
     case 'svg':
-      return <Sisvg size={16} color="#bea500"  />
+      return <Sisvg style={{minWidth: 16, height: 16}} size={16} color="#bea500"  />
     case 'json':
-      return <Sijson size={16} color="#fcdc00" />
+      return <Sijson style={{minWidth: 16, height: 16}} size={16} color="#fcdc00" />
   }
 }

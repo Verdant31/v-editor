@@ -1,56 +1,42 @@
-import ANSIToHTML from 'ansi-to-html';
+import { atom, useAtom } from 'jotai';
 import { useEffect, useState } from "react";
-import { getWebContainerInstance } from '../../lib/webContainer';
+import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
+import { startShell } from './projectFunctions';
 
-const ANSIConverter = new ANSIToHTML()
+export const terminalAtom = atom<Terminal | null>(null);
+const fitAddon = new FitAddon();
 
 export function useProject() {
-  const [output, setOutput] = useState<string[]>([])
-  const [ projectIsRunning, setProjectIsRunning ] = useState(false)
+  const [ terminalInstance, setTerminalInstance ] = useAtom(terminalAtom);
+  const [ appUrl , setAppUrl ] = useState('');
 
+  const updateAppUrl = (url: string) => setAppUrl(url);
+  
   useEffect(() => {
-    if(!projectIsRunning) handleRunProject();
-  },[])
-
-  const handleRunProject = async () => {
-    const webContainer = await getWebContainerInstance()
-
-    const createProject = await webContainer.spawn('npx', ['create-vite-app', '.', '--template=react-ts'], {
-      output: false,
-    })
-    
-    setOutput(['🔥 Installing dependecies...'])
-    createProject.output.pipeTo(
-      new WritableStream({
-        write(data) {
-          setOutput((state) => [...state, ANSIConverter.toHtml(data)])
+    if(!terminalInstance) {
+      const terminal = new Terminal({
+        convertEol: true,
+        rows: 6,
+        fontFamily: 'JetBrains Mono, monospace',
+        theme: {
+          blue: '#98db9f',
+          magenta: '#98db9f',
+          background: '#202024',
         },
-      }),
-    )
-    await createProject.exit
-    const install = await webContainer.spawn('npm', ['install'])
-    await install.exit;
+      });
+      terminal.loadAddon(fitAddon);
+      fitAddon.fit();
+      terminal.open(document.querySelector('.terminal') as HTMLElement);
+      setTerminalInstance(terminal);
+      return;
+    }
+    startShell(terminalInstance, updateAppUrl);
     
-    await webContainer.spawn('npm', ['run', 'dev'])
-    webContainer.on("server-ready", (port, url) => {
-      const iframeEl = document.querySelector('iframe');
-      (iframeEl as HTMLIFrameElement).src = url;
-      setProjectIsRunning(true)
-      setOutput((state) => [
-        ...state, 
-        '🚀 Running the application!', 
-        '🌎 Address: ' + url,
-      ])
-    });
-    
-  }
-
-  const appUrl = output.find((line) => line.includes('🌎 Address: '))?.split('🌎 Address: ')[1];
+  }, [terminalInstance])
 
   return {
-    output,
-    handleRunProject,
-    projectIsRunning,
     appUrl,
+    setAppUrl
   }
 }

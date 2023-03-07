@@ -3,6 +3,7 @@ import { CaretDown, CaretUp } from 'phosphor-react';
 import { Resizable } from 're-resizable';
 import 'xterm/css/xterm.css';
 import { useTerminal } from './useTerminal';
+
 const resizableCss : React.CSSProperties = {
   display: "flex", 
   flexDirection: 'column',

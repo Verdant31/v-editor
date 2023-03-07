@@ -9,13 +9,13 @@ import { FolderTree } from './sub';
 export function FoldersBar() {
   const [ width, setWidth ] = useState(220)
   const { data } = useQuery('getFilesNames', async () => await getFiles())
-  
+
   return (
     <motion.div 
-      className="h-[100vh] flex"
-      initial={{  x: -200, width: 0  }}
+      className="flex"
+      initial={{  x: -200,  }}
       transition={{ duration: 1}}
-      animate={{ x: 0, width: width }}
+      animate={{ x: 0, }}
     >
       <Resizable 
         size={{width,height: 'auto', }}

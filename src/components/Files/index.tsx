@@ -1,21 +1,21 @@
-import { motion } from 'framer-motion';
 import { Resizable } from 're-resizable';
 import { useState } from 'react';
 import { useQuery } from "react-query";
 import FolderAccordion from '../Accordion';
 import { getFiles } from "./query";
-import { FolderTree } from './sub';
+import { Container } from './sub/Container';
+import { FolderTree } from './sub/Folder';
 
 export function FoldersBar() {
+  const [ alreadyAnimated, setAlreadyAnimated ] = useState(false);
   const [ width, setWidth ] = useState(220)
   const { data } = useQuery('getFilesNames', async () => await getFiles())
 
   return (
-    <motion.div 
-      className="flex"
-      initial={{  x: -200,  }}
-      transition={{ duration: 1}}
-      animate={{ x: 0, }}
+    <Container
+      alreadyAnimated={alreadyAnimated}
+      setAlreadyAnimated={setAlreadyAnimated}
+      width={width}
     >
       <Resizable 
         size={{width,height: 'auto', }}
@@ -36,7 +36,7 @@ export function FoldersBar() {
         ))}
       </div>
       </Resizable>
-    </motion.div>
+    </Container>
   )
 }
 

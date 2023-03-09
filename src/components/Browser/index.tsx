@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { atom, useAtom } from 'jotai';
 import { Resizable } from 're-resizable';
 
 interface BrowserProps {
@@ -7,31 +8,30 @@ interface BrowserProps {
   setAppUrl: (value: string) => void;
 }
 
+export const BrowserWidthAtom = atom(320)
+
+
 export function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
+  const [ width, setWidth ] = useAtom(BrowserWidthAtom);
   return (
     <motion.div 
       className="bg-[#202024] h-[100%] flex"
-      initial={{
-        x: 200,
-      }}
-      transition={{
-        duration: 1
-      }}
-      animate={{
-        x: 0,
-      }}
+      initial={{ x: 200,}}
+      transition={{ duration: 1}}
+      animate={{ x: 0,}}
     >
         <Resizable
           maxWidth={700}
-          minWidth={320}
+          size={{width,height: '100%', }}
           enable={{left: true}}
-          className="border-l-[10px] border-[#151518]"
-          defaultSize={{
-            width: 320,
-            height: '100%',
+          onResize={(e, direction, ref, d) => {
+            if(ref.offsetWidth < 320) return setWidth(320);
+            if(ref.offsetWidth > 700) return setWidth(700);
+            setWidth(ref.offsetWidth)
           }}
+          className="border-l-[10px] border-[#13111B]"
         >
-          <div className="h-12 bg-[#151518] flex items-center justify-center ">
+          <div className="h-12 bg-[#13111B] flex items-center justify-center ">
             {projectIsRunning && (
               <input 
                 onChange={(e) => setAppUrl(e.target.value)}

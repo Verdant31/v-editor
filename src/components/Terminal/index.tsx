@@ -10,7 +10,7 @@ const resizableCss : React.CSSProperties = {
   position: "absolute", 
   bottom: 0, 
   left: 0, 
-  background: "#202024",
+  background: "#191622",
 }
 
 export function Terminal() {
@@ -18,7 +18,7 @@ export function Terminal() {
 
   return (
     <motion.div 
-      className="relative w-[100%]"
+      className="relative w-[100%] bg-[#191622] "
       initial={{
         y: 200,
       }}
@@ -35,10 +35,11 @@ export function Terminal() {
         onResizeStop={(e, direction, ref, d) => {
           setHeight(height + d.height);
         }}
+        className="border-t-[2px] border-t-pink-400"
         style={resizableCss}
         enable={{top: true}}
       >
-        <div className="flex justify-between items-center p-2 bg-[#151518]">
+        <div className="flex justify-between items-center p-2 bg-[#191622]">
           <h1 className="font-monospace">Terminal</h1>
           <div onClick={() => setIsCollapsed(!isCollapsed)}>
             {isCollapsed 

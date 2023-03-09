@@ -22,7 +22,7 @@ export function useProject() {
         theme: {
           blue: '#98db9f',
           magenta: '#98db9f',
-          background: '#202024',
+          background: '#191622',
         },
       });
       terminal.loadAddon(fitAddon);

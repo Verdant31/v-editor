@@ -1,33 +1,24 @@
 import { motion } from 'framer-motion';
+import { useAtom } from 'jotai';
 import { CaretDown, CaretUp } from 'phosphor-react';
 import { Resizable } from 're-resizable';
 import 'xterm/css/xterm.css';
+import { browserWidthAtom } from '../Browser';
+import { foldersWidthAtom } from '../FoldersBar';
 import { useTerminal } from './useTerminal';
-
-const resizableCss : React.CSSProperties = {
-  display: "flex", 
-  flexDirection: 'column',
-  position: "absolute", 
-  bottom: 0, 
-  left: 0, 
-  background: "#191622",
-}
 
 export function Terminal() {
   const { height, setHeight, isCollapsed, setIsCollapsed } = useTerminal();
+  const [ browserWidth,  ] = useAtom(browserWidthAtom);
+  const [ foldersWidth,  ] = useAtom(foldersWidthAtom);
 
   return (
     <motion.div 
-      className="relative w-[100%] bg-[#191622] "
-      initial={{
-        y: 200,
-      }}
-      transition={{
-        duration: 1
-      }}
-      animate={{
-        y: 0,
-      }}
+      className="absolute bottom-0 bg-[#191622] "
+      initial={{ y: 200 }}
+      style={{width: `calc(100% - ${browserWidth + foldersWidth}px)`, left: foldersWidth}}
+      transition={{ duration: 1 }}
+      animate={{ y: 0 }}
     >
       <Resizable
         size={{height, width: "100%"}}
@@ -56,3 +47,11 @@ export function Terminal() {
   )
 }
        
+const resizableCss : React.CSSProperties = {
+  display: "flex", 
+  flexDirection: 'column',
+  position: "absolute", 
+  bottom: 0, 
+  left: 0, 
+  background: "#191622",
+}

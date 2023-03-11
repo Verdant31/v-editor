@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { useAtom } from 'jotai';
 import PacmanLoader from 'react-spinners/PacmanLoader';
+import { appUrlAtom } from '../useProject';
 
-interface LoadingProjectProps {
-  appUrl: string;
-}
-export default function LoadingProject({appUrl} : LoadingProjectProps) {
+export default function LoadingProject() {
+  const [ appUrl, setAppUrl ] = useAtom(appUrlAtom);
+
   return (
     <AnimatePresence>
       {!appUrl && (
@@ -12,7 +13,7 @@ export default function LoadingProject({appUrl} : LoadingProjectProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute left-[35%] w-96 translate-x-[-35%] top-[30%] translate-y-[-30%] flex flex-col justify-center items-center gap-8 px-12"
+          className="absolute left-[50%] w-96 translate-x-[-50%] top-[30%] translate-y-[-30%] flex flex-col justify-center items-center gap-8 px-12"
         >
           <PacmanLoader  
             color="#8257e5"

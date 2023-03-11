@@ -8,15 +8,17 @@ interface BrowserProps {
   setAppUrl: (value: string) => void;
 }
 
-export const BrowserWidthAtom = atom(320)
+export const browserWidthAtom = atom(320)
 
 
 export function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
-  const [ width, setWidth ] = useAtom(BrowserWidthAtom);
+  const [ width, setWidth ] = useAtom(browserWidthAtom);
+  
   return (
     <motion.div 
-      className="bg-[#202024] h-[100%] flex"
+      className="bg-[#202024] h-[100%] flex absolute right-0"
       initial={{ x: 200,}}
+      style={{height: `calc(100% - ${24}px)`, marginTop: 24}}
       transition={{ duration: 1}}
       animate={{ x: 0,}}
     >

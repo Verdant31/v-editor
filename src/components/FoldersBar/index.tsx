@@ -8,7 +8,7 @@ import { getFiles } from "./query";
 import { Container } from './sub/Container';
 import { FolderTree } from './sub/Folder';
 
-export const foldersWidthAtom = atom(260)
+export const foldersWidthAtom = atom(310)
 
 export function FoldersBar() {
   const [ width, setWidth ] = useAtom(foldersWidthAtom);
@@ -22,23 +22,24 @@ export function FoldersBar() {
     <Container width={width}>
       <Resizable 
         size={{width, height: 'auto'}}
-        minWidth={260}
+        minWidth={310}
         onResize={(e, direction, ref, d) => {
           if(ref.offsetWidth < 220) return setWidth(220);
           setWidth(ref.offsetWidth)
         }}
-        maxWidth={400}
+        maxWidth={450}
         className="bg-[#13111B] "
         enable={{right: true}}
       >
         {!!appUrl && (
           <div className="flex h-[100%]">
-            <div className="flex p-4 items-center flex-col gap-4 h-[100%] bg-[#201B2D]">
+            <div className="flex p-[10px] items-center flex-col gap-4 h-[100%] bg-[#201B2D]">
               <Files size={32} />
               <MagnifyingGlass size={32} />
             </div>
-            <div className="flex flex-col w-[100%]">
-              <p className="w-[100%] pt-4 px-3  text-sm font-monospace">Explorar arquivos</p>
+            <div className="flex flex-col w-[100%] " style={{height: `calc(100% - ${24}px)`, marginTop: 24}}>
+              <p className="w-[100%] p-2 text-sm font-monospace">V-EDITOR</p>
+              <p className="w-[100%] bg-[#191622] p-2  text-sm font-monospace">Explorar arquivos</p>
               <div className="p-2">
                 {data && data.map((folder) => (
                   <FolderAccordion key={folder.name} width={width} totalLength={data.length} title={folder.name}>

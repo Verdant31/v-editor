@@ -1,4 +1,5 @@
 import { Browser } from '../../components/Browser';
+import File from '../../components/File';
 import { FoldersBar } from '../../components/FoldersBar';
 import { Terminal } from '../../components/Terminal';
 import Topbar from '../../components/Topbar';
@@ -12,6 +13,7 @@ export function Project() {
       <Topbar />
       <Terminal />
       <FoldersBar />
+      <File />
       <LoadingProject  />
       <Browser
         projectIsRunning={!!appUrl}

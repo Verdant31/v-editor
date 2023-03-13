@@ -1,15 +1,17 @@
 import { atom, useAtom } from 'jotai';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { startShell } from './projectFunctions';
 
 export const terminalAtom = atom<Terminal | null>(null);
+export const appUrlAtom = atom<string>('');
+
 const fitAddon = new FitAddon();
 
 export function useProject() {
   const [ terminalInstance, setTerminalInstance ] = useAtom(terminalAtom);
-  const [ appUrl , setAppUrl ] = useState('');
+  const [ appUrl, setAppUrl ] = useAtom(appUrlAtom);
 
   const updateAppUrl = (url: string) => setAppUrl(url);
   
@@ -22,7 +24,7 @@ export function useProject() {
         theme: {
           blue: '#98db9f',
           magenta: '#98db9f',
-          background: '#202024',
+          background: '#191622',
         },
       });
       terminal.loadAddon(fitAddon);

@@ -1,11 +1,13 @@
-import { useAtom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import 'xterm/css/xterm.css';
 import { terminalAtom } from '../../pages/Project/useProject';
 
+export const terminalHeightAtom = atom(200)
+
 export function useTerminal() {
   const [ terminalInstance, _ ] = useAtom(terminalAtom);
-  const [ height, setHeight ] = useState(200);
+  const [ height, setHeight ] = useAtom(terminalHeightAtom);
   const [ isCollapsed, setIsCollapsed ] = useState(false);
   const [ previousHeight, setPreviousHeight ] = useState(200);
 

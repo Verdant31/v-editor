@@ -12,7 +12,7 @@ export const foldersWidthAtom = atom(310)
 
 export function FoldersBar() {
   const [ width, setWidth ] = useAtom(foldersWidthAtom);
-  const [ appUrl, setAppUrl ] = useAtom(appUrlAtom);
+  const [ appUrl,  ] = useAtom(appUrlAtom);
 
   const { data } = useQuery('getFilesNames', async () => await getFiles(), {
     enabled: !!appUrl,
@@ -40,10 +40,10 @@ export function FoldersBar() {
             <div className="flex flex-col w-[100%] " style={{height: `calc(100% - ${24}px)`, marginTop: 24}}>
               <p className="w-[100%] p-2 text-sm font-monospace">V-EDITOR</p>
               <p className="w-[100%] bg-[#191622] p-2  text-sm font-monospace">Explorar arquivos</p>
-              <div className="p-2">
+              <div className="p-2 overflow-y-scroll">
                 {data && data.map((folder) => (
                   <FolderAccordion key={folder.name} width={width} totalLength={data.length} title={folder.name}>
-                    <FolderTree folders={folder.dirs} />
+                    <FolderTree fatherFolder={folder.name} folders={folder.dirs} />
                   </FolderAccordion>
                 ))}
               </div>

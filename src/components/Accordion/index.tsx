@@ -31,7 +31,7 @@ export default function FolderAccordion({ title, children, totalLength = 1, widt
 
   return (
     <Disclosure>
-      <Disclosure.Button className="flex items-center whitespace-nowrap gap-2 group">
+      <Disclosure.Button className="flex items-center whitespace-nowrap gap-2 group my-1 ">
         <Folder 
           size={24} 
           weight="fill"
@@ -44,10 +44,10 @@ export default function FolderAccordion({ title, children, totalLength = 1, widt
         />
       </Disclosure.Button>
       <Disclosure.Panel 
-          style={{maxHeight: contentHeight, width: width as number - 32 }} 
+          style={{maxHeight: contentHeight - totalLength * 24, width: width as number - 100 }} 
           className="overflow-y-scroll padding-0"
       >
-          <div className="ml-4 mb-2">
+          <div className="ml-4 mb-2 mt-1">
             {children}
           </div>
       </Disclosure.Panel>

@@ -1,16 +1,24 @@
+import { useAtom } from 'jotai';
+import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import FolderAccordion from '../../Accordion';
+import { currentFileAtom } from '../../File';
+import { openFile } from '../query';
 
-
-export function Folder({folder, folderName, isUnique = false }: any) {
+export function Folder({folder, folderName, isUnique = false, fatherFolder, handleOpenFile}: any) {
+  
   if(isUnique) {
     return (
       <FolderAccordion title={folderName}>
         {Object.values(folder).map((file: any) => {
           return (
-            <div key={file.name} className="flex items-center gap-2">
+            <div 
+              onClick={() => handleOpenFile(`${fatherFolder}/${file.name}`)} 
+              key={file.name} 
+              className="flex items-center gap-2 cursor-pointer"
+            >
               {getIconFromExtension(file.name)}
-              <div className=" whitespace-nowrap flex">
+              <div className="whitespace-nowrap flex">
                 <span>{file.name}</span>
               </div>
             </div>
@@ -21,7 +29,10 @@ export function Folder({folder, folderName, isUnique = false }: any) {
   }
 
   if (Object.keys(folder).length === 1) {
-    return <Folder folder={folder[Object.keys(folder)[0]]} folderName={Object.keys(folder)[0]} />
+    return <Folder 
+      folder={folder[Object.keys(folder)[0]]} 
+      folderName={Object.keys(folder)[0]} 
+    />
   }
     
   return (
@@ -33,16 +44,20 @@ export function Folder({folder, folderName, isUnique = false }: any) {
               <Folder 
                 key={Object.keys(subfolderOrFile)[0]}
                 folderName={Object.keys(folder)[index]}
+                fatherFolder={`${fatherFolder}/${folderName}/${Object.keys(folder)[index]}`}
                 folder={subfolderOrFile}
                 isUnique={true}
               />
             )
-              
           }
         }
         if(Object.keys(subfolderOrFile).includes('name')){
           return (
-            <div key={subfolderOrFile.name} className="flex items-center gap-2">
+            <div 
+              onClick={() => handleOpenFile(`${fatherFolder}/${folderName}/${subfolderOrFile.name}`)}
+              key={subfolderOrFile.name} 
+              className="flex items-center gap-2 cursor-pointer"
+            >
               {getIconFromExtension(subfolderOrFile.name)}
               <div className=" whitespace-nowrap flex">
                 <span>{subfolderOrFile.name}</span>
@@ -50,19 +65,37 @@ export function Folder({folder, folderName, isUnique = false }: any) {
             </div>
           )
         };
-        return <Folder key={subfolderOrFile.name} folder={subfolderOrFile} folderName={Object.keys(folder)[index]} />
+        return <Folder 
+          key={subfolderOrFile.name} 
+          folder={subfolderOrFile} 
+          folderName={Object.keys(folder)[index]} 
+        />
       })}
     </FolderAccordion>
   );
 }
 
-export function FolderTree({folders} : any) {
+export function FolderTree({folders, fatherFolder} : any) {
+  const [ , setCode ] = useAtom(currentFileAtom);
+  
+  const openFileMutation = useMutation(async (fileName: string) => {
+    await openFile(fileName).then((res) => setCode(res))
+  });
+
+  const handleOpenFile = (fileName: string) => {
+    openFileMutation.mutateAsync(fileName)
+  }
+
   return (
     <div>
       {Object.keys(folders).map((folder: any) => {
         if(Object.keys(folders[folder]).length === 2) {
           return (
-            <div key={folders[folder].name} className="flex items-center  gap-2">
+            <div 
+              onClick={() => handleOpenFile(`${fatherFolder}/${folders[folder].name}`)}
+              key={folders[folder].name} 
+              className="flex items-center my-1  gap-2 cursor-pointer"
+            >
               {getIconFromExtension(folders[folder].name)}
               <div className=" whitespace-nowrap flex">
                 <span>{folders[folder].name}</span>
@@ -71,7 +104,13 @@ export function FolderTree({folders} : any) {
           )
         }
         return (
-          <Folder key={folder.name} folder={folders[folder]} folderName={folder} />
+          <Folder 
+            key={folder.name} 
+            folder={folders[folder]} 
+            folderName={folder} 
+            fatherFolder={fatherFolder}  
+            handleOpenFile={handleOpenFile}
+          />
         )
       })}
     </div>

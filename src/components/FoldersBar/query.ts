@@ -1,6 +1,19 @@
 import { DirEnt } from "@webcontainer/api";
 import { getWebContainerInstance } from "../../lib/webContainer";
 
+export async function openFile(fileName: string) {
+  const webContainer = await getWebContainerInstance();
+
+  const code = await webContainer.fs.readFile(fileName, 'utf8');
+  const extension = fileName.split('.').pop();
+  const name = fileName.split('/').pop() as string;
+  return {
+    code: code.replace(/^\n/, ""),
+    extension,
+    name,
+  };
+}
+
 async function getDirectories(folder: DirEnt<string>) {
   const webContainer = await getWebContainerInstance();
   const result : any = {};

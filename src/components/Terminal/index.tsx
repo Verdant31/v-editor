@@ -11,7 +11,7 @@ export function Terminal() {
   const { height, setHeight, isCollapsed, setIsCollapsed } = useTerminal();
   const [ browserWidth,  ] = useAtom(browserWidthAtom);
   const [ foldersWidth,  ] = useAtom(foldersWidthAtom);
-  console.log(height)
+
   return (
     <motion.div 
       className="absolute bottom-0 bg-[#191622] mt-4 "

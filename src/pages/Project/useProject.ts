@@ -39,6 +39,6 @@ export function useProject() {
 
   return {
     appUrl,
-    setAppUrl
+    setAppUrl,
   }
 }

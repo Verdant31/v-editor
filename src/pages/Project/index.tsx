@@ -13,7 +13,7 @@ export function Project() {
       <Topbar />
       <Terminal />
       <FoldersBar />
-      <File />
+      {!!appUrl && <File />}
       <LoadingProject  />
       <Browser
         projectIsRunning={!!appUrl}

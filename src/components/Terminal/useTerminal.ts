@@ -12,7 +12,7 @@ export function useTerminal() {
   const [ previousHeight, setPreviousHeight ] = useState(200);
 
   useEffect(() => {
-    terminalInstance?.resize(terminalInstance.cols, Math.floor(height/20));
+    terminalInstance?.resize(terminalInstance.cols, Math.floor(height/24));
   },[height])
 
   useEffect(() => {

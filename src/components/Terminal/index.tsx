@@ -11,10 +11,10 @@ export function Terminal() {
   const { height, setHeight, isCollapsed, setIsCollapsed } = useTerminal();
   const [ browserWidth,  ] = useAtom(browserWidthAtom);
   const [ foldersWidth,  ] = useAtom(foldersWidthAtom);
-
+  console.log(height)
   return (
     <motion.div 
-      className="absolute bottom-0 bg-[#191622] "
+      className="absolute bottom-0 bg-[#191622] mt-4 "
       initial={{ y: 200 }}
       style={{width: `calc(100% - ${browserWidth + foldersWidth}px)`, left: foldersWidth}}
       transition={{ duration: 1 }}
@@ -23,8 +23,10 @@ export function Terminal() {
       <Resizable
         size={{height, width: "100%"}}
         maxHeight={400}
-        onResizeStop={(e, direction, ref, d) => {
-          setHeight(height + d.height);
+        onResize={(e, direction, ref, d) => {
+          if(ref.offsetHeight < 200) return setHeight(200);
+          if(ref.offsetHeight > 400) return setHeight(400);
+          setHeight(ref.offsetHeight)
         }}
         className="border-t-[2px] border-t-pink-400"
         style={resizableCss}
@@ -39,7 +41,7 @@ export function Terminal() {
             }
           </div>
         </div>
-        <div id="parent" style={{height: height - 40, paddingLeft: "20px", paddingTop: "10px"}}>
+        <div id="parent" style={{height: height - 40, paddingLeft: "20px"}}>
           <div className="terminal"></div>
         </div>
       </Resizable>

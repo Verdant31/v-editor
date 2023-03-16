@@ -1,24 +1,18 @@
-import CodeEditor from '@uiw/react-textarea-code-editor'
-import { atom, useAtom } from 'jotai'
-import { X } from 'phosphor-react'
-import { browserWidthAtom } from "../Browser"
-import { foldersWidthAtom } from "../FoldersBar"
-import { terminalHeightAtom } from "../Terminal/useTerminal"
-
-type CurrentFile = {
-  code: string;
-  extension: string | undefined;
-  name: string;
-}
-
-export const currentFileAtom = atom<CurrentFile>({} as CurrentFile);
+import CodeEditor from '@uiw/react-textarea-code-editor';
+import { Circle, X } from 'phosphor-react';
+import { useFile } from './useFile';
 
 export default function File() {
-  const [ terminalHeight,  ] = useAtom(terminalHeightAtom);
-  const [ browserWidth,  ] = useAtom(browserWidthAtom);
-  const [ foldersWidth,  ] = useAtom(foldersWidthAtom);
-  const [ currentFile, setCurrentFile ] = useAtom(currentFileAtom);
-  console.log(currentFile)
+  const { 
+    currentFile,
+    setCurrentFile,
+    codeIsDirty,
+    handleCloseFile,
+    terminalHeight,
+    browserWidth,
+    foldersWidth
+  } = useFile();
+  
   return (
     <div 
       className="bg-[#191622] absolute flex flex-col justify-center"
@@ -33,10 +27,11 @@ export default function File() {
         ? (
           <>
             <div className="pt-2 px-6 flex items-center gap-2 mb-2">
+              {codeIsDirty && <Circle color="#f472b6" size={16} weight="fill" />}
               <p className="font-monospace text-zinc-300">{currentFile.name}</p> 
-              <X size={16} /> 
+              <X className="cursor-pointer" size={16} onClick={handleCloseFile} /> 
             </div>
-            <div className="overflow-auto">
+            <div className="overflow-auto h-full">
               <CodeEditor
                 value={currentFile.code}
                 language={currentFile.extension}

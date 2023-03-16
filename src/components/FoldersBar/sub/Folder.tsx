@@ -2,7 +2,7 @@ import { useAtom } from 'jotai';
 import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import FolderAccordion from '../../Accordion';
-import { currentFileAtom } from '../../File';
+import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
 import { openFile } from '../query';
 
 export function Folder({folder, folderName, isUnique = false, fatherFolder, handleOpenFile}: any) {
@@ -77,9 +77,13 @@ export function Folder({folder, folderName, isUnique = false, fatherFolder, hand
 
 export function FolderTree({folders, fatherFolder} : any) {
   const [ , setCode ] = useAtom(currentFileAtom);
+  const [ , setInitialCode ] = useAtom(initialCodeAtom);
   
   const openFileMutation = useMutation(async (fileName: string) => {
-    await openFile(fileName).then((res) => setCode(res))
+    await openFile(fileName).then((res) => {
+      setCode(res)
+      setInitialCode(res.code)
+    })
   });
 
   const handleOpenFile = (fileName: string) => {

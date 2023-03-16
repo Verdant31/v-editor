@@ -8,7 +8,7 @@ interface BrowserProps {
   setAppUrl: (value: string) => void;
 }
 
-export const browserWidthAtom = atom(320)
+export const browserWidthAtom = atom(340)
 
 
 export function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
@@ -27,7 +27,7 @@ export function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
           size={{width,height: '100%', }}
           enable={{left: true}}
           onResize={(e, direction, ref, d) => {
-            if(ref.offsetWidth < 320) return setWidth(320);
+            if(ref.offsetWidth < 320) return setWidth(340);
             if(ref.offsetWidth > 700) return setWidth(700);
             setWidth(ref.offsetWidth)
           }}

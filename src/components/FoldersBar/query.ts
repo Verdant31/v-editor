@@ -3,15 +3,20 @@ import { getWebContainerInstance } from "../../lib/webContainer";
 
 export async function openFile(fileName: string) {
   const webContainer = await getWebContainerInstance();
-  const code = await webContainer.fs.readFile(fileName, 'utf8');
-  const extension = fileName.split('.').pop();
-  const name = fileName.split('/').pop() as string;
-  return {
-    code: code.replace(/^\n/, ""),
-    extension,
-    name,
-    completePath: fileName,
-  };
+  try{
+    const code = await webContainer.fs.readFile(fileName, 'utf8');
+    console.log(code);
+    const extension = fileName.split('.').pop();
+    const name = fileName.split('/').pop() as string;
+    return {
+      code: code.replace(/^\n/, ""),
+      extension,
+      name,
+      completePath: fileName,
+    };
+  }catch(err) {
+    console.log(err)
+  }
 }
 
 async function getDirectories(folder: DirEnt<string>) {

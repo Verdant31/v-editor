@@ -45,10 +45,10 @@ export async function getFiles() {
   const folders = (await webContainer.fs.readdir('/', { withFileTypes: true })).filter((dir) => dir.isDirectory());
   const rootFiles = (await webContainer.fs.readdir('/', { withFileTypes: true })).filter((dir) => !dir.isDirectory());
   const res = await Promise.all(folders.map(async (folder) => ({name: folder.name, dirs: await getDirectories(folder)})))
-  // res.push({
-  //   name: 'root',
-  //   dirs: rootFiles,
-  // })
+  res.push({
+    name: 'root',
+    dirs: rootFiles,
+  })
   return res;
 }
 

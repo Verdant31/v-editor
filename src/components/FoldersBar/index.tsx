@@ -41,11 +41,18 @@ export function FoldersBar() {
               <p className="w-[100%] p-2 px-4 text-sm font-monospace">V-EDITOR</p>
               <p className="w-[100%] bg-[#191622] p-2 px-4 text-sm font-monospace">Explorar arquivos</p>
               <div className="p-4 overflow-y-scroll">
-                {data && data.map((folder) => (
-                  <FolderAccordion key={folder.name} width={width} totalLength={data.length} title={folder.name}>
-                    <FolderTree fatherFolder={folder.name} folders={folder.dirs} />
-                  </FolderAccordion>
-                ))}
+                {data && data.map((folder) => {
+                  if(folder.name === "root") {
+                    return (
+                      <FolderTree key={folder.name} fatherFolder={""} folders={folder.dirs} />
+                    )
+                  }
+                  return (
+                    <FolderAccordion key={folder.name} width={width} totalLength={data.length} title={folder.name}>
+                      <FolderTree fatherFolder={folder.name} folders={folder.dirs} />
+                    </FolderAccordion>
+                  )
+                })}
               </div>
             </div>
           </div>

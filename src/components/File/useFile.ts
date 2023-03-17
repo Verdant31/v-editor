@@ -42,7 +42,7 @@ export function useFile() {
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [codeIsDirty]);
+  }, [codeIsDirty, currentFile.code]);
 
   useEffect(() => {
     if(currentFile.code && currentFile.code.length > 0 && currentFile.code !== initialCode) {
@@ -65,6 +65,7 @@ export function useFile() {
 
 export const saveFile = async (path: string, content: string) => {
   const webContainer = await getWebContainerInstance();
+  console.log(content)
   try {
     await webContainer.fs.writeFile(path, content);
   } catch (error) {

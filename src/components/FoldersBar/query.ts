@@ -5,7 +5,6 @@ export async function openFile(fileName: string) {
   const webContainer = await getWebContainerInstance();
   try{
     const code = await webContainer.fs.readFile(fileName, 'utf8');
-    console.log(code);
     const extension = fileName.split('.').pop();
     const name = fileName.split('/').pop() as string;
     return {
@@ -52,3 +51,16 @@ export async function getFiles() {
   return res;
 }
 
+export async function createFile(name: string, content: string) {
+  const webContainer = await getWebContainerInstance();
+  return webContainer.fs.writeFile(name, content);
+}
+
+export async function renameFile(name: string, newName: string, refetch: () => void) {
+  const webContainer = await getWebContainerInstance();
+  const targetFileContent = await webContainer.fs.readFile(name, 'utf8');
+  await webContainer.fs.rm(name).then(async () => {
+    await webContainer.fs.writeFile(newName, targetFileContent).then(() => {
+    });
+  })
+}

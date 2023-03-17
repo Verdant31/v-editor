@@ -46,7 +46,6 @@ export function useFile() {
 
   useEffect(() => {
     if(currentFile.code && currentFile.code.length > 0 && currentFile.code !== initialCode) {
-      console.log(currentFile.code !== initialCode)
       setCodeIsDirty(true);
     }
   }, [currentFile.code])

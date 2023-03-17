@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.contexify {
+  --contexify-activeItem-bgColor: #6037bf;
+}
+
 @layer base {
   * {
     margin: 0;

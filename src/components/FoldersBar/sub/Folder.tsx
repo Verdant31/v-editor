@@ -1,9 +1,11 @@
 import { useAtom } from 'jotai';
+import { useState } from 'react';
+import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
 import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import FolderAccordion from '../../Accordion';
 import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
-import { openFile } from '../query';
+import { openFile, renameFile } from '../query';
 
 export function Folder({folder, folderName, isUnique = false, fatherFolder, handleOpenFile}: any) {
   if(Object.keys(folder).length === 2 && !isUnique) {
@@ -99,10 +101,15 @@ export function Folder({folder, folderName, isUnique = false, fatherFolder, hand
   );
 }
 
-export function FolderTree({folders, fatherFolder} : any) {
+export function FolderTree({folders, fatherFolder, refetch } : any) {
   const [ , setCode ] = useAtom(currentFileAtom);
   const [ , setInitialCode ] = useAtom(initialCodeAtom);
+
+  const [ currentRenamingFile, setCurrentRenamingFile ] = useState<string>();
+  const [ newNameFile, setNewNameFile ] = useState<string>();
   
+  const { show } = useContextMenu({id: "file_menu"});
+
   const openFileMutation = useMutation(async (fileName: string) => {
     await openFile(fileName).then((res) => {
       if(!res) return;
@@ -115,19 +122,66 @@ export function FolderTree({folders, fatherFolder} : any) {
     openFileMutation.mutateAsync(fileName)
   }
 
+  const displayMenu = (e: any, path: string) => {
+    setCurrentRenamingFile(path)
+    show({event: e, props: path});
+  }
+
+  const handleStartRenamingProcess = async (path: string) => {
+    setNewNameFile(path.split('/').pop())
+    const inputValue = path.split('/').pop();
+    const input = document.querySelector(`input[value="${inputValue}"]`) as HTMLInputElement;
+    input.focus();
+  }
+
+  const handleResetRename = () => {
+    setNewNameFile(undefined)
+  }
+
+  const handlerRenameFile = async () => {
+    if(!currentRenamingFile || !newNameFile) return;
+    await renameFile(currentRenamingFile, newNameFile, refetch).then(() => {
+      refetch()
+      handleResetRename()
+    })
+  }
+
   return (
     <div>
+      <Menu id="file_menu" className="bg-[#8257e5]">
+        <Item onClick={({props}) => handleStartRenamingProcess(props)}>
+          <p className="font-monospace text-zinc-100">Rename file</p>
+        </Item>
+        <Separator  />
+        <Item>
+          <p className="font-monospace text-zinc-100">Delete file</p>
+        </Item>
+      </Menu>
       {Object.keys(folders).map((folder: any) => {
         if(Object.keys(folders[folder]).length === 2) {
           return (
             <div 
+              onContextMenu={(e) => displayMenu(e, `${fatherFolder}/${folders[folder].name}`) }
               onClick={() => handleOpenFile(`${fatherFolder}/${folders[folder].name}`)}
               key={folders[folder].name} 
               className="flex items-center my-1  gap-2 cursor-pointer"
             >
               {getIconFromExtension(folders[folder].name)}
               <div className=" whitespace-nowrap flex">
-                <span>{folders[folder].name}</span>
+                <input 
+                  onKeyDown={(e) => {
+                    if(e.key === "Escape") handleResetRename();
+                    if(e.key === "Enter") handlerRenameFile()
+                  }}
+                  onBlur={() => handleResetRename()}
+                  disabled={currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`} 
+                  className="bg-transparent cursor-pointer " 
+                  value={(currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`)
+                    ? folders[folder].name
+                    : newNameFile
+                  } 
+                  onChange={(e) => setNewNameFile(e.target.value)}
+                />
               </div>
             </div>
           )

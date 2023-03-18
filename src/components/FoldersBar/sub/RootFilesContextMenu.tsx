@@ -1,11 +1,11 @@
 import { Item, Menu, Separator } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
 
-interface ContextMenuProps {
+interface RootFilesContextMenuProps {
   startFileCreating: () => void;
 }
 
-export function ContextMenu({ startFileCreating }: ContextMenuProps) {
+export function RootFilesContextMenu({ startFileCreating }: RootFilesContextMenuProps) {
   return (
     <Menu id="menu_id" className="bg-[#8257e5]">
       <Item onClick={startFileCreating}>

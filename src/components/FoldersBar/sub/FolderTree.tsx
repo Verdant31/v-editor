@@ -7,7 +7,13 @@ import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
 import { openFile, renameFile } from '../query';
 import { Folder } from './Folder';
 
-export function FolderTree({folders, fatherFolder, refetch } : any) {
+interface FolderTreeProps {
+  folders: any;
+  fatherFolder: string;
+  refetch: () => void;
+}
+
+export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) {
   const [ , setCode ] = useAtom(currentFileAtom);
   const [ , setInitialCode ] = useAtom(initialCodeAtom);
 
@@ -73,7 +79,7 @@ export function FolderTree({folders, fatherFolder, refetch } : any) {
             <div 
               onContextMenu={(e) => displayMenu(e, path) }
               onClick={() => handleOpenFile(path)}
-              key={folders[folder].name} 
+              key={path} 
               className="flex items-center my-1 cursor-pointer"
             >
               {getIconFromExtension(folders[folder].name)}

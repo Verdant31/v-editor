@@ -1,23 +1,62 @@
-import { useAtom } from 'jotai';
-import { useState } from 'react';
-import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
-import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import FolderAccordion from '../../Accordion';
-import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
-import { openFile, renameFile } from '../query';
 
-export function Folder({folder, folderName, isUnique = false, fatherFolder, handleOpenFile}: any) {
+interface FolderProps {
+  folder: any;
+  folderName: string;
+  isUnique?: boolean;
+  fatherFolder: string;
+  handleOpenFile: (path: string) => void;
+  displayMenu: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, path: string) => void;
+  currentRenamingFile: string | undefined;
+  newNameFile: string | undefined;
+  setNewNameFile: (newNameFile: string) => void;
+  handleResetRename: () => void;
+  handlerRenameFile: () => void;
+}
+
+export function Folder({
+  folder, 
+  folderName, 
+  isUnique = false, 
+  fatherFolder, 
+  handleOpenFile,
+  displayMenu,
+  currentRenamingFile,
+  newNameFile,
+  setNewNameFile,
+  handleResetRename,
+  handlerRenameFile
+}: FolderProps) {
   if(Object.keys(folder).length === 2 && !isUnique) {
+    const path = `${fatherFolder}/${folderName}`;
     return (
       <div 
-        onClick={() => handleOpenFile(`${fatherFolder}/${folderName}/${folder.name}`)}
-        key={folder.name} 
+        onContextMenu={(e) => displayMenu(e, path) }
+        onClick={() => handleOpenFile(path)}
+        key={path} 
         className="flex items-center gap-2 cursor-pointer"
       >
         {getIconFromExtension(folder.name)}
         <div className=" whitespace-nowrap flex">
-          <span>{folder.name}</span>
+          {currentRenamingFile !== path
+            ? <span>{folder.name}</span>
+            : (
+              <input 
+                onKeyDown={(e) => {
+                  if(e.key === "Escape") handleResetRename();
+                  if(e.key === "Enter") handlerRenameFile()
+                }}
+                onBlur={() => handleResetRename()}
+                className="bg-transparent w-32 outline-none cursor-pointer border-[1px] border-[#8257e5]" 
+                value={(currentRenamingFile !== path)
+                  ? folder.name
+                  : newNameFile
+                } 
+                onChange={(e) => setNewNameFile(e.target.value)}
+              />             
+            )
+          }
         </div>
       </div>
     )
@@ -26,15 +65,34 @@ export function Folder({folder, folderName, isUnique = false, fatherFolder, hand
     return (
       <FolderAccordion title={folderName}>
         {Object.values(folder).map((file: any) => {
+          const path = `${fatherFolder}/${file.name}`
           return (
             <div 
-              onClick={() => handleOpenFile(`${fatherFolder}/${file.name}`)} 
+              onContextMenu={(e) => displayMenu(e, path) }
+              onClick={() => handleOpenFile(path)} 
               key={file.name} 
               className="flex items-center gap-2 cursor-pointer"
             >
               {getIconFromExtension(file.name)}
               <div className="whitespace-nowrap flex">
-                <span>{file.name}</span>
+                {currentRenamingFile !== path
+                  ? <span>{file.name}</span>
+                  : (
+                    <input 
+                      onKeyDown={(e) => {
+                        if(e.key === "Escape") handleResetRename();
+                        if(e.key === "Enter") handlerRenameFile()
+                      }}
+                      onBlur={() => handleResetRename()}
+                      className="bg-transparent w-32 outline-none cursor-pointer border-[1px] border-[#8257e5]" 
+                      value={(currentRenamingFile !== path)
+                        ? file.name
+                        : newNameFile
+                      } 
+                      onChange={(e) => setNewNameFile(e.target.value)}
+                    />
+                  )
+                }
               </div>
             </div>
           )
@@ -49,8 +107,14 @@ export function Folder({folder, folderName, isUnique = false, fatherFolder, hand
         <Folder 
           folder={folder[Object.keys(folder)[0]]} 
           folderName={Object.keys(folder)[0]}
-          fatherFolder={`${fatherFolder}/${folderName}`} 
+          fatherFolder={fatherFolder + '/' + folderName} 
           handleOpenFile={handleOpenFile}
+          displayMenu={displayMenu}
+          currentRenamingFile={currentRenamingFile}
+          newNameFile={newNameFile}
+          setNewNameFile={setNewNameFile}
+          handleResetRename={handleResetRename}
+          handlerRenameFile={handlerRenameFile}
         />
       </FolderAccordion>
     )
@@ -70,21 +134,46 @@ export function Folder({folder, folderName, isUnique = false, fatherFolder, hand
                 folder={subfolderOrFile}
                 isUnique={true}
                 handleOpenFile={handleOpenFile}
+                displayMenu={displayMenu}
+                currentRenamingFile={currentRenamingFile}
+                newNameFile={newNameFile}
+                setNewNameFile={setNewNameFile}
+                handleResetRename={handleResetRename}
+                handlerRenameFile={handlerRenameFile}
               />
             )
           }
         }
         
         if(Object.keys(subfolderOrFile).includes('name')){
+          const path = `${fatherFolder}/${folderName}/${subfolderOrFile.name}`
           return (
             <div 
-              onClick={() => handleOpenFile(`${fatherFolder}/${folderName}/${subfolderOrFile.name}`)}
+              onContextMenu={(e) => displayMenu(e, path) }
+              onClick={() => handleOpenFile(path)}
               key={subfolderOrFile.name} 
               className="flex items-center gap-2 cursor-pointer"
             >
               {getIconFromExtension(subfolderOrFile.name)}
               <div className=" whitespace-nowrap flex">
-                <span>{subfolderOrFile.name}</span>
+                {currentRenamingFile !== path
+                  ? <span>{subfolderOrFile.name}</span>
+                  : (
+                    <input 
+                      onKeyDown={(e) => {
+                        if(e.key === "Escape") handleResetRename();
+                        if(e.key === "Enter") handlerRenameFile()
+                      }}
+                      onBlur={() => handleResetRename()}
+                      className="bg-transparent w-32 outline-none cursor-pointer border-[1px] border-[#8257e5]" 
+                      value={(currentRenamingFile !== path)
+                        ? subfolderOrFile.name
+                        : newNameFile
+                      } 
+                      onChange={(e) => setNewNameFile(e.target.value)}
+                    />
+                  )
+                }
               </div>
             </div>
           )
@@ -95,115 +184,14 @@ export function Folder({folder, folderName, isUnique = false, fatherFolder, hand
           folderName={Object.keys(folder)[index]} 
           fatherFolder={`${fatherFolder}/${folderName}`}
           handleOpenFile={handleOpenFile}
+          displayMenu={displayMenu}
+          currentRenamingFile={currentRenamingFile}
+          newNameFile={newNameFile}
+          setNewNameFile={setNewNameFile}
+          handleResetRename={handleResetRename}
+          handlerRenameFile={handlerRenameFile}
         />
       })}
     </FolderAccordion>
-  );
-}
-
-export function FolderTree({folders, fatherFolder, refetch } : any) {
-  const [ , setCode ] = useAtom(currentFileAtom);
-  const [ , setInitialCode ] = useAtom(initialCodeAtom);
-
-  const [ currentRenamingFile, setCurrentRenamingFile ] = useState<string>();
-  const [ newNameFile, setNewNameFile ] = useState<string>();
-  
-  const { show } = useContextMenu({id: fatherFolder});
-
-  const openFileMutation = useMutation(async (fileName: string) => {
-    await openFile(fileName).then((res) => {
-      if(!res) return;
-      setCode(res)
-      setInitialCode(res.code)
-    })
-  });
-
-  const handleOpenFile = (fileName: string) => {
-    openFileMutation.mutateAsync(fileName)
-  }
-
-  const displayMenu = (e: any, path: string) => {
-    show({event: e, props: path});
-  }
-
-  const handleStartRenamingProcess = async (path: string) => {
-    setNewNameFile(path.split('/').pop())
-    setCurrentRenamingFile(path)
-    setTimeout(() => {
-      const inputValue = path.split('/').pop();
-      const input = document.querySelector(`input[value="${inputValue}"]`) as HTMLInputElement;
-      input.focus();
-    }, 100)
-  }
-
-  const handleResetRename = () => {
-    setCurrentRenamingFile(undefined)
-  }
-
-  const handlerRenameFile = async () => {
-    if(!currentRenamingFile || !newNameFile) return;
-    const pathWihoutName = currentRenamingFile.split('/').slice(0, -1).join('/');
-    await renameFile(currentRenamingFile, pathWihoutName + '/' + newNameFile ).then(() => {
-      refetch()
-      handleResetRename()
-    })
-  }
-
-  return (
-    <div>
-      <Menu id={fatherFolder} className="bg-[#8257e5]">
-        <Item onClick={({props}) => handleStartRenamingProcess(props)}>
-          <p className="font-monospace text-zinc-100">Rename file</p>
-        </Item>
-        <Separator  />
-        <Item>
-          <p className="font-monospace text-zinc-100">Delete file</p>
-        </Item>
-      </Menu>
-      {Object.keys(folders).map((folder: any) => {
-        if(Object.keys(folders[folder]).length === 2) {
-          return (
-            <div 
-              onContextMenu={(e) => displayMenu(e, `${fatherFolder}/${folders[folder].name}`) }
-              onClick={() => handleOpenFile(`${fatherFolder}/${folders[folder].name}`)}
-              key={folders[folder].name} 
-              className="flex items-center my-1 cursor-pointer"
-            >
-              {getIconFromExtension(folders[folder].name)}
-              <div className="ml-2 whitespace-nowrap flex">
-                {currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`
-                  ? <span>{folders[folder].name}</span>
-                  : (
-                    <input 
-                      onKeyDown={(e) => {
-                        if(e.key === "Escape") handleResetRename();
-                        if(e.key === "Enter") handlerRenameFile()
-                      }}
-                      onBlur={() => handleResetRename()}
-                      className="bg-transparent w-32 outline-none cursor-pointer border-[1px] border-[#8257e5]" 
-                      value={(currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`)
-                        ? folders[folder].name
-                        : newNameFile
-                      } 
-                      onChange={(e) => setNewNameFile(e.target.value)}
-                  />
-                  )
-                }
-              </div>
-            </div>
-          )
-        }
-
-        return (
-          <Folder 
-            key={folder.name} 
-            folder={folders[folder]} 
-            folderName={folder} 
-            fatherFolder={fatherFolder}  
-            handleOpenFile={handleOpenFile}
-          />
-        )
-      })}
-    </div>
   );
 }

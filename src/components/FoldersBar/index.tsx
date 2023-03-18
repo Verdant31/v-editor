@@ -9,7 +9,7 @@ import FolderAccordion from '../Accordion';
 import { createFile, getFiles } from "./query";
 import { Container } from './sub/Container';
 import { ContextMenu } from './sub/ContextMenu';
-import { FolderTree } from './sub/Folder';
+import { FolderTree } from './sub/FolderTree';
 
 export const foldersWidthAtom = atom(310)
 
@@ -27,7 +27,7 @@ export function FoldersBar() {
     enabled: !!appUrl,
   })
 
-  const displayMenu = (e: any) => {
+  const displayMenu = (e: React.MouseEvent) => {
     if((e.target as HTMLDivElement).className !== "flex flex-col w-[100%]") return;
     show({event: e});
   }

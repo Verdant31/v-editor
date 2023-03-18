@@ -56,7 +56,7 @@ export async function createFile(name: string, content: string) {
   return webContainer.fs.writeFile(name, content);
 }
 
-export async function renameFile(name: string, newName: string, refetch: () => void) {
+export async function renameFile(name: string, newName: string) {
   const webContainer = await getWebContainerInstance();
   const targetFileContent = await webContainer.fs.readFile(name, 'utf8');
   await webContainer.fs.rm(name).then(async () => {

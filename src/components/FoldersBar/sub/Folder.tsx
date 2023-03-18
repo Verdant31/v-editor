@@ -108,7 +108,7 @@ export function FolderTree({folders, fatherFolder, refetch } : any) {
   const [ currentRenamingFile, setCurrentRenamingFile ] = useState<string>();
   const [ newNameFile, setNewNameFile ] = useState<string>();
   
-  const { show } = useContextMenu({id: "file_menu"});
+  const { show } = useContextMenu({id: fatherFolder});
 
   const openFileMutation = useMutation(async (fileName: string) => {
     await openFile(fileName).then((res) => {
@@ -123,24 +123,27 @@ export function FolderTree({folders, fatherFolder, refetch } : any) {
   }
 
   const displayMenu = (e: any, path: string) => {
-    setCurrentRenamingFile(path)
     show({event: e, props: path});
   }
 
   const handleStartRenamingProcess = async (path: string) => {
     setNewNameFile(path.split('/').pop())
-    const inputValue = path.split('/').pop();
-    const input = document.querySelector(`input[value="${inputValue}"]`) as HTMLInputElement;
-    input.focus();
+    setCurrentRenamingFile(path)
+    setTimeout(() => {
+      const inputValue = path.split('/').pop();
+      const input = document.querySelector(`input[value="${inputValue}"]`) as HTMLInputElement;
+      input.focus();
+    }, 100)
   }
 
   const handleResetRename = () => {
-    setNewNameFile(undefined)
+    setCurrentRenamingFile(undefined)
   }
 
   const handlerRenameFile = async () => {
     if(!currentRenamingFile || !newNameFile) return;
-    await renameFile(currentRenamingFile, newNameFile, refetch).then(() => {
+    const pathWihoutName = currentRenamingFile.split('/').slice(0, -1).join('/');
+    await renameFile(currentRenamingFile, pathWihoutName + '/' + newNameFile ).then(() => {
       refetch()
       handleResetRename()
     })
@@ -148,7 +151,7 @@ export function FolderTree({folders, fatherFolder, refetch } : any) {
 
   return (
     <div>
-      <Menu id="file_menu" className="bg-[#8257e5]">
+      <Menu id={fatherFolder} className="bg-[#8257e5]">
         <Item onClick={({props}) => handleStartRenamingProcess(props)}>
           <p className="font-monospace text-zinc-100">Rename file</p>
         </Item>
@@ -164,24 +167,28 @@ export function FolderTree({folders, fatherFolder, refetch } : any) {
               onContextMenu={(e) => displayMenu(e, `${fatherFolder}/${folders[folder].name}`) }
               onClick={() => handleOpenFile(`${fatherFolder}/${folders[folder].name}`)}
               key={folders[folder].name} 
-              className="flex items-center my-1  gap-2 cursor-pointer"
+              className="flex items-center my-1 cursor-pointer"
             >
               {getIconFromExtension(folders[folder].name)}
-              <div className=" whitespace-nowrap flex">
-                <input 
-                  onKeyDown={(e) => {
-                    if(e.key === "Escape") handleResetRename();
-                    if(e.key === "Enter") handlerRenameFile()
-                  }}
-                  onBlur={() => handleResetRename()}
-                  disabled={currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`} 
-                  className="bg-transparent cursor-pointer " 
-                  value={(currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`)
-                    ? folders[folder].name
-                    : newNameFile
-                  } 
-                  onChange={(e) => setNewNameFile(e.target.value)}
-                />
+              <div className="ml-2 whitespace-nowrap flex">
+                {currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`
+                  ? <span>{folders[folder].name}</span>
+                  : (
+                    <input 
+                      onKeyDown={(e) => {
+                        if(e.key === "Escape") handleResetRename();
+                        if(e.key === "Enter") handlerRenameFile()
+                      }}
+                      onBlur={() => handleResetRename()}
+                      className="bg-transparent w-32 outline-none cursor-pointer border-[1px] border-[#8257e5]" 
+                      value={(currentRenamingFile !== `${fatherFolder}/${folders[folder].name}`)
+                        ? folders[folder].name
+                        : newNameFile
+                      } 
+                      onChange={(e) => setNewNameFile(e.target.value)}
+                  />
+                  )
+                }
               </div>
             </div>
           )

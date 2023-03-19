@@ -1,7 +1,5 @@
-import chalk from 'chalk';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import FolderAccordion from '../../Accordion';
-console.log(chalk.red(''))
 
 interface FolderProps {
   folder: any;

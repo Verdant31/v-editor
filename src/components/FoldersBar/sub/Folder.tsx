@@ -1,5 +1,7 @@
+import chalk from 'chalk';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import FolderAccordion from '../../Accordion';
+console.log(chalk.red(''))
 
 interface FolderProps {
   folder: any;
@@ -34,7 +36,6 @@ export function Folder({
       <div 
         onContextMenu={(e) => displayMenu(e, path) }
         onClick={() => handleOpenFile(path)}
-        key={path} 
         className="flex items-center gap-2 cursor-pointer"
       >
         {getIconFromExtension(folder.name)}
@@ -63,14 +64,14 @@ export function Folder({
   }
   if(isUnique) {
     return (
-      <FolderAccordion title={folderName}>
+      <FolderAccordion path={fatherFolder} title={folderName}>
         {Object.values(folder).map((file: any) => {
           const path = `${fatherFolder}/${file.name}`
           return (
             <div 
               onContextMenu={(e) => displayMenu(e, path) }
               onClick={() => handleOpenFile(path)} 
-              key={file.name} 
+              key={path} 
               className="flex items-center gap-2 cursor-pointer"
             >
               {getIconFromExtension(file.name)}
@@ -103,7 +104,7 @@ export function Folder({
 
   if (Object.keys(folder).length === 1) {
     return (
-      <FolderAccordion title={folderName}>
+      <FolderAccordion path={fatherFolder + '/' + folderName} title={folderName}>
         <Folder 
           folder={folder[Object.keys(folder)[0]]} 
           folderName={Object.keys(folder)[0]}
@@ -120,15 +121,15 @@ export function Folder({
     )
   }
 
-    
+  
   return (
-    <FolderAccordion title={folder.name ? folder.name : folderName}>
+    <FolderAccordion path={fatherFolder + '/' + folderName} title={folder.name ? folder.name : folderName}>
       {Object.values(folder).map((subfolderOrFile: any, index) => {
         if(Object.keys(subfolderOrFile).length === 1) {
           if(Object.keys(Object.assign({}, Object.values(subfolderOrFile)[0])).length === 2) {
             return (
               <Folder 
-                key={Object.keys(subfolderOrFile)[0]}
+                key={`${fatherFolder}/${folderName}/${Object.keys(folder)[index]}`}
                 folderName={Object.keys(folder)[index]}
                 fatherFolder={`${fatherFolder}/${folderName}/${Object.keys(folder)[index]}`}
                 folder={subfolderOrFile}
@@ -151,7 +152,7 @@ export function Folder({
             <div 
               onContextMenu={(e) => displayMenu(e, path) }
               onClick={() => handleOpenFile(path)}
-              key={subfolderOrFile.name} 
+              key={path} 
               className="flex items-center gap-2 cursor-pointer"
             >
               {getIconFromExtension(subfolderOrFile.name)}

@@ -70,7 +70,7 @@ export function FoldersBar() {
                     )
                   }
                   return (
-                    <FolderAccordion key={folder.name} width={width} totalLength={data.length} title={folder.name}>
+                    <FolderAccordion path={folder.name} key={folder.name} width={width} totalLength={data.length} title={folder.name}>
                       <FolderTree refetch={refetch} fatherFolder={folder.name} folders={folder.dirs} />
                     </FolderAccordion>
                   )

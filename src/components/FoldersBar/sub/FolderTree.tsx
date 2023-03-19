@@ -1,10 +1,11 @@
 import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
+import { useContextMenu } from 'react-contexify';
 import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
 import { openFile, renameFile } from '../query';
+import { FilesContextMenu } from './FilesContextMenu';
 import { Folder } from './Folder';
 
 interface FolderTreeProps {
@@ -20,7 +21,7 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
   const [ currentRenamingFile, setCurrentRenamingFile ] = useState<string>();
   const [ newNameFile, setNewNameFile ] = useState<string>();
   
-  const { show } = useContextMenu({id: fatherFolder});
+  const { show: showFilesMenu } = useContextMenu({id: fatherFolder});
 
   const openFileMutation = useMutation(async (fileName: string) => {
     await openFile(fileName).then((res) => {
@@ -32,10 +33,6 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
 
   const handleOpenFile = (fileName: string) => {
     openFileMutation.mutateAsync(fileName)
-  }
-
-  const displayMenu = (e: React.MouseEvent, path: string) => {
-    show({event: e, props: path});
   }
 
   const handleStartRenamingProcess = async (path: string) => {
@@ -61,17 +58,16 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
     })
   }
 
+  const displayMenu = (e: React.MouseEvent, path: string) => {
+    showFilesMenu({event: e, props: path});
+  }
+
   return (
     <div>
-      <Menu id={fatherFolder} className="bg-[#8257e5]">
-        <Item onClick={({props}) => handleStartRenamingProcess(props)}>
-          <p className="font-monospace text-zinc-100">Rename file</p>
-        </Item>
-        <Separator  />
-        <Item>
-          <p className="font-monospace text-zinc-100">Delete file</p>
-        </Item>
-      </Menu>
+      <FilesContextMenu 
+        id={fatherFolder}
+        handleStartRenamingProcess={handleStartRenamingProcess}
+      />
       {Object.keys(folders).map((folder: any) => {
         if(Object.keys(folders[folder]).length === 2) {
           const path = `${fatherFolder}/${folders[folder].name}`
@@ -106,7 +102,6 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
             </div>
           )
         }
-
         return (
           <Folder
             key={folder.name} 

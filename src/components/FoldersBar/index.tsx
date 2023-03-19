@@ -8,8 +8,8 @@ import { appUrlAtom } from '../../pages/Project/useProject';
 import FolderAccordion from '../Accordion';
 import { createFile, getFiles } from "./query";
 import { Container } from './sub/Container';
-import { ContextMenu } from './sub/ContextMenu';
-import { FolderTree } from './sub/Folder';
+import { FolderTree } from './sub/FolderTree';
+import { RootFilesContextMenu } from './sub/RootFilesContextMenu';
 
 export const foldersWidthAtom = atom(310)
 
@@ -27,7 +27,7 @@ export function FoldersBar() {
     enabled: !!appUrl,
   })
 
-  const displayMenu = (e: any) => {
+  const displayMenu = (e: React.MouseEvent) => {
     if((e.target as HTMLDivElement).className !== "flex flex-col w-[100%]") return;
     show({event: e});
   }
@@ -41,9 +41,7 @@ export function FoldersBar() {
   
   return (
     <Container width={width}>
-      <ContextMenu 
-        startFileCreating={() => setUserIsCreatingFile(true)}
-      />
+      <RootFilesContextMenu  startFileCreating={() => setUserIsCreatingFile(true)} />
       <Resizable 
         size={{width, height: 'auto'}}
         minWidth={310}
@@ -63,7 +61,7 @@ export function FoldersBar() {
             </div>
             <div  className="flex flex-col w-[100%]" style={{height: `calc(100% - ${24}px)`, marginTop: 24}}>
               <p className="w-[100%] p-2 px-4 text-sm font-monospace">V-EDITOR</p>
-              <p className="w-[100%] bg-[#191622] p-2 px-4 text-sm font-monospace">Explorar arquivos</p>
+              <p className="w-[100%] bg-[#191622] p-2 px-4 text-sm font-monospace">Explore files</p>
               <div className="p-4 pb-1 overflow-y-scroll">
                 {data && data.map((folder) => {
                   if(folder.name === "root") {
@@ -72,7 +70,7 @@ export function FoldersBar() {
                     )
                   }
                   return (
-                    <FolderAccordion key={folder.name} width={width} totalLength={data.length} title={folder.name}>
+                    <FolderAccordion path={folder.name} key={folder.name} width={width} totalLength={data.length} title={folder.name}>
                       <FolderTree refetch={refetch} fatherFolder={folder.name} folders={folder.dirs} />
                     </FolderAccordion>
                   )

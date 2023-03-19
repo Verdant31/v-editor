@@ -25,21 +25,33 @@ interface FolderAccordionProps {
   children: React.ReactNode;
   totalLength?: number;
   width?: number;
+  path: string;
+  displayFolderMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, path: string) => void;
 }
 
 
-export default function FolderAccordion({ title, children, totalLength = 1, width}: FolderAccordionProps) {
+export default function FolderAccordion({ 
+  title, 
+  children, 
+  totalLength = 1, 
+  width,
+  path,
+  displayFolderMenu
+}: FolderAccordionProps) {
   const contentHeight = typeof window !== 'undefined' ? (window.innerHeight - totalLength*64) : 0;
 
   return (
     <Disclosure>
-      <Disclosure.Button className="flex items-center whitespace-nowrap gap-2 group my-1 ">
+      <Disclosure.Button 
+        onContextMenu={(e) => displayFolderMenu && displayFolderMenu(e as any, path)} 
+        className="flex items-center whitespace-nowrap gap-2 group my-1 "
+      >
         <Folder 
           size={24} 
           weight="fill"
           color={getFolderColor(title)} 
         />
-        <span>{title}</span>
+        <span onClick={() => console.log(path)}>{title}</span>
         <ChevronDownIcon
           className="ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
           aria-hidden

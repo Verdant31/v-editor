@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
 import { openFile, renameFile } from '../query';
-import { FilesContextMenu } from './FilesContextMenu';
+import { FilesContextMenu } from './ContextsMenus/FilesContextMenu';
 import { Folder } from './Folder';
 
 interface FolderTreeProps {
@@ -64,10 +64,7 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
 
   return (
     <div>
-      <FilesContextMenu 
-        id={fatherFolder}
-        handleStartRenamingProcess={handleStartRenamingProcess}
-      />
+      <FilesContextMenu id={fatherFolder} handleStartRenamingProcess={handleStartRenamingProcess} />
       {Object.keys(folders).map((folder: any) => {
         if(Object.keys(folders[folder]).length === 2) {
           const path = `${fatherFolder}/${folders[folder].name}`

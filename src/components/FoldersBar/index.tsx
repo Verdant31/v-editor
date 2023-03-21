@@ -8,8 +8,8 @@ import { appUrlAtom } from '../../pages/Project/useProject';
 import FolderAccordion from '../Accordion';
 import { createFile, getFiles } from "./query";
 import { Container } from './sub/Container';
+import { RootFilesContextMenu } from './sub/ContextsMenus/RootFilesContextMenu';
 import { FolderTree } from './sub/FolderTree';
-import { RootFilesContextMenu } from './sub/RootFilesContextMenu';
 
 export const foldersWidthAtom = atom(310)
 

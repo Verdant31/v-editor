@@ -1,24 +1,9 @@
 import { Disclosure } from '@headlessui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Folder } from 'phosphor-react';
-
-const getFolderColor = (folderName: string) => {
-  switch(folderName) {
-    case 'node_modules':
-      return '#a3e635';
-    case 'assets':
-      return '#f5d60b';
-    case 'src':
-      return '#4ade80';
-    case 'pages':
-      return '#b91c1c';
-    case 'public':
-      return '#0284c7';
-    default:
-      return '#fff';
-  }
-}
-
+import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
+import "react-contexify/dist/ReactContexify.css";
+import { getFolderColor } from '../../utils/getFolderColor';
 
 interface FolderAccordionProps {
   title: string;
@@ -36,14 +21,35 @@ export default function FolderAccordion({
   totalLength = 1, 
   width,
   path,
-  displayFolderMenu
 }: FolderAccordionProps) {
+  const { show } = useContextMenu({id: path});
   const contentHeight = typeof window !== 'undefined' ? (window.innerHeight - totalLength*64) : 0;
+
+  const displayFoldersMenu = (e: React.MouseEvent) => {
+    show({event: e});
+  }
+
+  const handleRenameFolder = () => {
+    console.log('rename folder')
+  }
 
   return (
     <Disclosure>
+      <Menu id={path} className="bg-[#8257e5]">
+        <Item onClick={(e) => handleRenameFolder()}>
+          <p className="font-monospace text-zinc-100">New file</p>
+        </Item>
+        <Separator  />
+        <Item onClick={(e) => handleRenameFolder()}>
+          <p className="font-monospace text-zinc-100">Rename folder</p>
+        </Item>
+        <Separator  />
+        <Item>
+          <p className="font-monospace text-zinc-100">Delete folder</p>
+        </Item>
+      </Menu>
       <Disclosure.Button 
-        onContextMenu={(e) => displayFolderMenu && displayFolderMenu(e as any, path)} 
+        onContextMenu={(e) => displayFoldersMenu(e)} 
         className="flex items-center whitespace-nowrap gap-2 group my-1 "
       >
         <Folder 
@@ -51,7 +57,7 @@ export default function FolderAccordion({
           weight="fill"
           color={getFolderColor(title)} 
         />
-        <span onClick={() => console.log(path)}>{title}</span>
+        <span>{title}</span>
         <ChevronDownIcon
           className="ease-[cubic-bezier(0.87,_0,_0.13,_1)] transition-transform duration-300 group-data-[state=open]:rotate-180"
           aria-hidden

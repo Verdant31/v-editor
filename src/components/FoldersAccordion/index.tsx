@@ -6,7 +6,7 @@ import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
 import { getFolderColor } from '../../utils/getFolderColor';
 import { renameFolder } from '../FoldersBar/query';
-import RenameFolderModal from '../Modals/RenameFolder';
+import RenameModal from '../Modals/RenameFolder';
 
 interface FolderAccordionProps {
   title: string;
@@ -29,7 +29,7 @@ export default function FolderAccordion({
 }: FolderAccordionProps) {
   const [ isRenameFolderModalOpen, setIsRenameFolderModalOpen ] = useState(false);
   
-  const { show } = useContextMenu({id: path});
+  const { show } = useContextMenu({id: path + '/folder'});
   const contentHeight = typeof window !== 'undefined' ? (window.innerHeight - totalLength*64) : 0;
 
   const displayFoldersMenu = (e: React.MouseEvent) => {
@@ -45,12 +45,12 @@ export default function FolderAccordion({
 
   return (
     <Disclosure>
-      <RenameFolderModal 
-        handleRenameFolder={handleRenameFolder}
+      <RenameModal 
+        handleRename={handleRenameFolder}
         isOpen={isRenameFolderModalOpen} 
         setIsOpen={setIsRenameFolderModalOpen}
       />
-      <Menu id={path} className="bg-[#8257e5]">
+      <Menu id={path + '/folder'} className="bg-[#8257e5]">
         <Item onClick={(e) => setIsRenameFolderModalOpen(true)}>
           <p className="font-monospace text-zinc-100">New file</p>
         </Item>

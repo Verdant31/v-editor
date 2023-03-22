@@ -4,11 +4,11 @@ import { Fragment, useState } from 'react';
 interface RenameFolderModalProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  handleRenameFolder: (newFolderName: string) => void;
+  handleRename: (newFolderName: string) => void;
 }
 
-export default function RenameFolderModal({ isOpen, setIsOpen, handleRenameFolder }: RenameFolderModalProps) {
-  const [ folderName, setFolderName ] = useState('');
+export default function RenameModal({ isOpen, setIsOpen, handleRename }: RenameFolderModalProps) {
+  const [ name, setName ] = useState('');
   
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -38,13 +38,13 @@ export default function RenameFolderModal({ isOpen, setIsOpen, handleRenameFolde
             >
               <Dialog.Panel className="bg-[#201B2D] transform overflow-hidden rounded-md p-4 text-left align-middle shadow-xl transition-all">
                 <input 
-                  value={folderName}
-                  onChange={(e) => setFolderName(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="bg-transparent min-w-[210px] outline-none" 
-                  placeholder="Write your new folder name" 
+                  placeholder="Write here your new name" 
                   onKeyDown={(e) => {
                     if (e.key !== 'Enter') return
-                    handleRenameFolder(folderName);
+                    handleRename(name);
                   }}
                 />
               </Dialog.Panel>

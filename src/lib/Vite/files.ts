@@ -186,7 +186,8 @@ export const packagejson = `
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vite-plugin-full-reload": "^1.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
@@ -223,11 +224,12 @@ export const tsConfig = `
 
 export const viteConfig = `
 import { defineConfig } from 'vite'
+import FullReload from 'vite-plugin-full-reload'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), FullReload(['src/**/'])],
 })
 
 `

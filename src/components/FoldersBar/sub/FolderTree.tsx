@@ -4,6 +4,7 @@ import { useContextMenu } from 'react-contexify';
 import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
+import RenameModal from '../../Modals/RenameFolder';
 import { openFile, renameFile } from '../query';
 import { FilesContextMenu } from './ContextsMenus/FilesContextMenu';
 import { Folder } from './Folder';
@@ -17,9 +18,8 @@ interface FolderTreeProps {
 export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) {
   const [ , setCode ] = useAtom(currentFileAtom);
   const [ , setInitialCode ] = useAtom(initialCodeAtom);
-
+  const [ isRenameFileModalOpen, setIsRenameFileModalOpen ] = useState(false);
   const [ currentRenamingFile, setCurrentRenamingFile ] = useState<string>();
-  const [ newNameFile, setNewNameFile ] = useState<string>();
   
   const { show: showFilesMenu } = useContextMenu({id: fatherFolder});
 
@@ -35,35 +35,32 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
     openFileMutation.mutateAsync(fileName)
   }
 
-  const handleStartRenamingProcess = async (path: string) => {
-    setNewNameFile(path.split('/').pop())
-    setCurrentRenamingFile(path)
-    setTimeout(() => {
-      const inputValue = path.split('/').pop();
-      const input = document.querySelector(`input[value="${inputValue}"]`) as HTMLInputElement;
-      input.focus();
-    }, 100)
-  }
-
-  const handleResetRename = () => {
-    setCurrentRenamingFile(undefined)
-  }
-
-  const handlerRenameFile = async () => {
-    if(!currentRenamingFile || !newNameFile) return;
+  const handlerRenameFile = async (newName: string) => {
+    if(!currentRenamingFile) return;
     const pathWihoutName = currentRenamingFile.split('/').slice(0, -1).join('/');
-    await renameFile(currentRenamingFile, pathWihoutName + '/' + newNameFile ).then(() => {
+    await renameFile(currentRenamingFile, pathWihoutName + '/' + newName).then(() => {
+      setIsRenameFileModalOpen(false)
       refetch()
-      handleResetRename()
     })
   }
 
-  const displayMenu = (e: React.MouseEvent, path: string) => {
-    showFilesMenu({event: e, props: path});
+  const handleStartRenamingProcess = async (path: string) => {
+    setCurrentRenamingFile(path)
+    setIsRenameFileModalOpen(true)
   }
+
+  const displayMenu = (e: React.MouseEvent, path: string) => {
+    showFilesMenu({event: e, props: path})
+  };
+  
 
   return (
     <div>
+      <RenameModal 
+        handleRename={handlerRenameFile}
+        isOpen={isRenameFileModalOpen}
+        setIsOpen={setIsRenameFileModalOpen}
+      />
       <FilesContextMenu id={fatherFolder} handleStartRenamingProcess={handleStartRenamingProcess} />
       {Object.keys(folders).map((folder: any) => {
         if(Object.keys(folders[folder]).length === 2) {
@@ -77,41 +74,20 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
             >
               {getIconFromExtension(folders[folder].name)}
               <div className="ml-2 whitespace-nowrap flex">
-                {currentRenamingFile !== path
-                  ? <span>{folders[folder].name}</span>
-                  : (
-                    <input 
-                      onKeyDown={(e) => {
-                        if(e.key === "Escape") handleResetRename();
-                        if(e.key === "Enter") handlerRenameFile()
-                      }}
-                      onBlur={() => handleResetRename()}
-                      className="bg-transparent w-32 outline-none cursor-pointer border-[1px] border-[#8257e5]" 
-                      value={(currentRenamingFile !== path)
-                        ? folders[folder].name
-                        : newNameFile
-                      } 
-                      onChange={(e) => setNewNameFile(e.target.value)}
-                    />
-                  )
-                }
+                <span>{folders[folder].name}</span>
               </div>
             </div>
           )
         }
         return (
           <Folder
+            refetch={refetch}
             key={folder.name} 
             folder={folders[folder]} 
             folderName={folder} 
             fatherFolder={fatherFolder}  
             handleOpenFile={handleOpenFile}
             displayMenu={displayMenu}
-            currentRenamingFile={currentRenamingFile}
-            newNameFile={newNameFile}
-            setNewNameFile={setNewNameFile}
-            handleResetRename={handleResetRename}
-            handlerRenameFile={handlerRenameFile}
           />
         )
       })}

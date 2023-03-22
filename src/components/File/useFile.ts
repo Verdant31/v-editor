@@ -65,7 +65,6 @@ export function useFile() {
 
 export const saveFile = async (path: string, content: string) => {
   const webContainer = await getWebContainerInstance();
-  console.log(content)
   try {
     await webContainer.fs.writeFile(path, content);
   } catch (error) {

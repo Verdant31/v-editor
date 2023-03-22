@@ -69,6 +69,8 @@ export async function renameFolder(name: string, newName: string, refetch: () =>
   const webContainer = await getWebContainerInstance();
   const pathWihoutName = name.split('/').slice(0, -1).join('/');
   const formattedNewName = pathWihoutName.length === 0 ? newName : pathWihoutName + '/' + newName;
+  console.log(name)
+  console.log(formattedNewName)
   await webContainer.spawn('mv', [name, formattedNewName]).then(() => {
     setTimeout(() => refetch(), 200)
   })

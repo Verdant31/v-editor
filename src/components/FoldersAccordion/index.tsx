@@ -39,6 +39,8 @@ export default function FolderAccordion({
   }
   
   const handleRenameFolder = async (newValue: string) => {
+    console.log("opa")
+    console.log(currentAction)
     if(currentAction === 'rename') {
       await renameFolder(path, newValue, refetch).then(() => {
         setIsActionFolderModalOpen(false);
@@ -54,6 +56,7 @@ export default function FolderAccordion({
   }
 
   const handleMenuClick = async (action: Action) => {
+    setCurrentAction(action);
     if(action !== "delete") {
       setIsActionFolderModalOpen(true)
       return;

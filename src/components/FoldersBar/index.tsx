@@ -1,21 +1,23 @@
 import { atom, useAtom } from 'jotai';
-import { File, Files, MagnifyingGlass } from 'phosphor-react';
+import { Files, MagnifyingGlass } from 'phosphor-react';
 import { Resizable } from 're-resizable';
 import { useState } from 'react';
-import { useContextMenu } from 'react-contexify';
+import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
+import "react-contexify/dist/ReactContexify.css";
 import { useQuery } from "react-query";
 import { appUrlAtom } from '../../pages/Project/useProject';
 import FolderAccordion from '../FoldersAccordion';
+import FileActionsModal from '../Modals/FileActionsModal';
 import { createFile, getFiles } from "./query";
 import { Container } from './sub/Container';
-import { RootFilesContextMenu } from './sub/ContextsMenus/RootFilesContextMenu';
 import { FolderTree } from './sub/FolderTree';
 
 export const foldersWidthAtom = atom(310)
 
+type RootFilesAction = 'newFolder' | 'newFile' | undefined;
 export function FoldersBar() {
-  const [ userIsCreatingFile, setUserIsCreatingFile ] = useState(false);
-  const [ newFileName, setNewFileName ] = useState<string>('');
+  const [ currentAction, setCurrentAction ] = useState<RootFilesAction>(undefined);
+  const [ isActionFolderModalOpen, setIsActionFolderModalOpen ] = useState(false);
   
   const [ width, setWidth ] = useAtom(foldersWidthAtom);
   const [ appUrl,  ] = useAtom(appUrlAtom);
@@ -32,16 +34,36 @@ export function FoldersBar() {
     show({event: e});
   }
 
-  const handleCreateFile = async () => {
-    await createFile(newFileName, '').then(() => {
-      setUserIsCreatingFile(false);
-      refetch();
-    });
+  const handleRootFileActions = async (newValue: string) => {
+    if(currentAction === "newFile") {
+      await createFile('./' + newValue, '').then(() => {
+        setIsActionFolderModalOpen(false);
+        refetch();
+      });
+    }
+  }
+
+  const handleMenuClick = async (action: RootFilesAction) => {
+    setCurrentAction(action);
+    setIsActionFolderModalOpen(true)
   }
   
   return (
     <Container width={width}>
-      <RootFilesContextMenu  startFileCreating={() => setUserIsCreatingFile(true)} />
+      <FileActionsModal 
+        handleAction={handleRootFileActions}
+        isOpen={isActionFolderModalOpen} 
+        setIsOpen={setIsActionFolderModalOpen}
+      />
+      <Menu id="menu_id" className="bg-[#8257e5]">
+        <Item onClick={() => handleMenuClick('newFile')}>
+          <p className="font-monospace text-zinc-100">New file</p>
+        </Item>
+        <Separator  />
+        <Item onClick={() => handleMenuClick('newFolder')}>
+          <p className="font-monospace text-zinc-100">New folder</p>
+        </Item>
+      </Menu>      
       <Resizable 
         size={{width, height: 'auto'}}
         minWidth={310}
@@ -76,22 +98,6 @@ export function FoldersBar() {
                   )
                 })}
               </div>
-              {userIsCreatingFile && (
-                <div className="px-[12px] gap-2 flex items-center">
-                  <File size={24} weight="light" />
-                  <input 
-                    onBlur={() => setUserIsCreatingFile(false)}
-                    onKeyDown={(e) => {
-                      if(e.key === "Escape") setUserIsCreatingFile(false);
-                      if(e.key === "Enter") handleCreateFile();
-                    }}
-                    autoFocus
-                    onChange={(e) => setNewFileName(e.target.value)}
-                    className="bg-transparent border-[1px] border-[#8257e5] outline-none pl-2" 
-                    type="text"
-                  />
-                </div>
-              )}
             </div>
           </div>
         )}

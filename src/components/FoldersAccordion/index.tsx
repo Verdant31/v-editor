@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
 import { getFolderColor } from '../../utils/getFolderColor';
-import { renameFolder } from '../FoldersBar/query';
-import RenameModal from '../Modals/RenameFolder';
+import { createFile, renameFolder } from '../FoldersBar/query';
+import FileActionsModal from '../Modals/FileActionsModal';
 
 interface FolderAccordionProps {
   title: string;
@@ -15,9 +15,10 @@ interface FolderAccordionProps {
   width?: number;
   path: string;
   displayFolderMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>, path: string) => void;
-  refetch?: () => void;
+  refetch: () => void;
 }
 
+type Action = 'rename' | 'delete' | 'newFile';
 
 export default function FolderAccordion({ 
   title, 
@@ -27,7 +28,8 @@ export default function FolderAccordion({
   path,
   refetch
 }: FolderAccordionProps) {
-  const [ isRenameFolderModalOpen, setIsRenameFolderModalOpen ] = useState(false);
+  const [ currentAction, setCurrentAction ] = useState<Action>('rename');
+  const [ isActionFolderModalOpen, setIsActionFolderModalOpen ] = useState(false);
   
   const { show } = useContextMenu({id: path + '/folder'});
   const contentHeight = typeof window !== 'undefined' ? (window.innerHeight - totalLength*64) : 0;
@@ -36,26 +38,38 @@ export default function FolderAccordion({
     show({event: e});
   }
   
-  const handleRenameFolder = async (newFolderName: string) => {
-    if(!refetch) return;
-    await renameFolder(path, newFolderName, refetch).then(() => {
-      setIsRenameFolderModalOpen(false);
-    });
+  const handleRenameFolder = async (newValue: string) => {
+    if(currentAction === 'rename') {
+      await renameFolder(path, newValue, refetch).then(() => {
+        setIsActionFolderModalOpen(false);
+      });
+    }
+    if(currentAction === 'newFile') {
+      await createFile(path + '/' + newValue, '').then(() => {
+        setIsActionFolderModalOpen(false);
+        refetch();
+      });
+    }
+  }
+
+  const handleMenuClick = (action: Action) => {
+    setIsActionFolderModalOpen(true);
+    setCurrentAction(action);
   }
 
   return (
     <Disclosure>
-      <RenameModal 
-        handleRename={handleRenameFolder}
-        isOpen={isRenameFolderModalOpen} 
-        setIsOpen={setIsRenameFolderModalOpen}
+      <FileActionsModal 
+        handleAction={handleRenameFolder}
+        isOpen={isActionFolderModalOpen} 
+        setIsOpen={setIsActionFolderModalOpen}
       />
       <Menu id={path + '/folder'} className="bg-[#8257e5]">
-        <Item onClick={(e) => setIsRenameFolderModalOpen(true)}>
+        <Item onClick={() => handleMenuClick('newFile')}>
           <p className="font-monospace text-zinc-100">New file</p>
         </Item>
         <Separator  />
-        <Item onClick={(e) => setIsRenameFolderModalOpen(true)}>
+        <Item onClick={() => handleMenuClick('rename')}>
           <p className="font-monospace text-zinc-100">Rename folder</p>
         </Item>
         <Separator  />

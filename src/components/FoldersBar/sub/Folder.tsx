@@ -20,7 +20,8 @@ export function Folder({
   displayMenu,
   refetch
 }: FolderProps) {
-  if(Object.keys(folder).length === 2 && !isUnique) {
+
+  if(Object.keys(folder).length === 2 && !isUnique && Object.keys(folder).includes('name')) {
     const path = `${fatherFolder}/${folderName}`;
     return (
       <div 
@@ -75,7 +76,7 @@ export function Folder({
 
   
   return (
-    <FolderAccordion path={fatherFolder + '/' + folderName} title={folder.name ? folder.name : folderName}>
+    <FolderAccordion refetch={refetch} path={fatherFolder + '/' + folderName} title={folder.name ? folder.name : folderName}>
       {Object.values(folder).map((subfolderOrFile: any, index) => {
         if(Object.keys(subfolderOrFile).length === 1) {
           if(Object.keys(Object.assign({}, Object.values(subfolderOrFile)[0])).length === 2) {

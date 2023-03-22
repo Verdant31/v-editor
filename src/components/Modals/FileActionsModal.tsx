@@ -1,14 +1,20 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 
-interface RenameFolderModalProps {
+interface FileActionsModalProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
-  handleRename: (newFolderName: string) => void;
+  handleAction: (newFolderName: string) => void;
+  placeHolder?: string;
 }
 
-export default function RenameModal({ isOpen, setIsOpen, handleRename }: RenameFolderModalProps) {
-  const [ name, setName ] = useState('');
+export default function FileActionsModal({ 
+  isOpen, 
+  setIsOpen, 
+  handleAction,
+  placeHolder = 'Write here your new name'
+}: FileActionsModalProps) {
+  const [ value, setValue ] = useState('');
   
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -38,13 +44,13 @@ export default function RenameModal({ isOpen, setIsOpen, handleRename }: RenameF
             >
               <Dialog.Panel className="bg-[#201B2D] transform overflow-hidden rounded-md p-4 text-left align-middle shadow-xl transition-all">
                 <input 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
                   className="bg-transparent min-w-[210px] outline-none" 
-                  placeholder="Write here your new name" 
+                  placeholder={placeHolder}
                   onKeyDown={(e) => {
                     if (e.key !== 'Enter') return
-                    handleRename(name);
+                    handleAction(value);
                   }}
                 />
               </Dialog.Panel>

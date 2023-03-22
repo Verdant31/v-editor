@@ -4,7 +4,7 @@ import { useContextMenu } from 'react-contexify';
 import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
-import RenameModal from '../../Modals/RenameFolder';
+import FileActionsModal from '../../Modals/FileActionsModal';
 import { openFile, renameFile } from '../query';
 import { FilesContextMenu } from './ContextsMenus/FilesContextMenu';
 import { Folder } from './Folder';
@@ -52,18 +52,17 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
   const displayMenu = (e: React.MouseEvent, path: string) => {
     showFilesMenu({event: e, props: path})
   };
-  
 
   return (
     <div>
-      <RenameModal 
-        handleRename={handlerRenameFile}
+      <FileActionsModal 
+        handleAction={handlerRenameFile}
         isOpen={isRenameFileModalOpen}
         setIsOpen={setIsRenameFileModalOpen}
       />
       <FilesContextMenu id={fatherFolder} handleStartRenamingProcess={handleStartRenamingProcess} />
       {Object.keys(folders).map((folder: any) => {
-        if(Object.keys(folders[folder]).length === 2) {
+        if(Object.keys(folders[folder]).length === 2 && Object.keys(folders[folder]).includes('name')) {
           const path = `${fatherFolder}/${folders[folder].name}`
           return (
             <div 

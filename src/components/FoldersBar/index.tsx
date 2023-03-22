@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useContextMenu } from 'react-contexify';
 import { useQuery } from "react-query";
 import { appUrlAtom } from '../../pages/Project/useProject';
-import FolderAccordion from '../Accordion';
+import FolderAccordion from '../FoldersAccordion';
 import { createFile, getFiles } from "./query";
 import { Container } from './sub/Container';
 import { RootFilesContextMenu } from './sub/ContextsMenus/RootFilesContextMenu';
@@ -23,9 +23,9 @@ export function FoldersBar() {
   const { show } = useContextMenu({id: "menu_id"});
 
   
-  const { data, refetch } = useQuery('getFilesNames', async () => await getFiles(), {
+  const { data,  refetch,  } = useQuery('getFilesNames', async () => await getFiles(), {
     enabled: !!appUrl,
-  })
+  })  
 
   const displayMenu = (e: React.MouseEvent) => {
     if((e.target as HTMLDivElement).className !== "flex flex-col w-[100%]") return;
@@ -70,7 +70,7 @@ export function FoldersBar() {
                     )
                   }
                   return (
-                    <FolderAccordion path={folder.name} key={folder.name} width={width} totalLength={data.length} title={folder.name}>
+                    <FolderAccordion refetch={refetch} path={folder.name} key={folder.name} width={width} totalLength={data.length} title={folder.name}>
                       <FolderTree refetch={refetch} fatherFolder={folder.name} folders={folder.dirs} />
                     </FolderAccordion>
                   )

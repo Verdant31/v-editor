@@ -1,5 +1,5 @@
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
-import FolderAccordion from '../../Accordion';
+import FolderAccordion from '../../FoldersAccordion';
 
 interface FolderProps {
   folder: any;

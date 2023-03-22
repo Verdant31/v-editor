@@ -64,3 +64,10 @@ export async function renameFile(name: string, newName: string) {
     });
   })
 }
+
+export async function renameFolder(name: string, newName: string, refetch: () => void) {
+  const webContainer = await getWebContainerInstance();
+  await webContainer.spawn('mv', [name, newName]).then(() => {
+    setTimeout(() => refetch(), 200)
+  })
+}

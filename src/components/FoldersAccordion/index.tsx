@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
 import { getFolderColor } from '../../utils/getFolderColor';
-import { createFile, renameFolder } from '../FoldersBar/query';
+import { createFile, deleteFolder, renameFolder } from '../FoldersBar/query';
 import FileActionsModal from '../Modals/FileActionsModal';
 
 interface FolderAccordionProps {
@@ -18,7 +18,7 @@ interface FolderAccordionProps {
   refetch: () => void;
 }
 
-type Action = 'rename' | 'delete' | 'newFile';
+type Action = 'rename' | 'delete' | 'newFile' | undefined;
 
 export default function FolderAccordion({ 
   title, 
@@ -28,7 +28,7 @@ export default function FolderAccordion({
   path,
   refetch
 }: FolderAccordionProps) {
-  const [ currentAction, setCurrentAction ] = useState<Action>('rename');
+  const [ currentAction, setCurrentAction ] = useState<Action>(undefined);
   const [ isActionFolderModalOpen, setIsActionFolderModalOpen ] = useState(false);
   
   const { show } = useContextMenu({id: path + '/folder'});
@@ -50,11 +50,17 @@ export default function FolderAccordion({
         refetch();
       });
     }
+    setCurrentAction(undefined);
   }
 
-  const handleMenuClick = (action: Action) => {
-    setIsActionFolderModalOpen(true);
-    setCurrentAction(action);
+  const handleMenuClick = async (action: Action) => {
+    if(action !== "delete") {
+      setIsActionFolderModalOpen(true)
+      return;
+    }
+    await deleteFolder(path, refetch).then(() => {
+      setIsActionFolderModalOpen(false);
+    });
   }
 
   return (
@@ -73,7 +79,7 @@ export default function FolderAccordion({
           <p className="font-monospace text-zinc-100">Rename folder</p>
         </Item>
         <Separator  />
-        <Item>
+        <Item onClick={() => handleMenuClick('delete')}>
           <p className="font-monospace text-zinc-100">Delete folder</p>
         </Item>
       </Menu>

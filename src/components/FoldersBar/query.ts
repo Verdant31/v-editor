@@ -73,3 +73,10 @@ export async function renameFolder(name: string, newName: string, refetch: () =>
     setTimeout(() => refetch(), 200)
   })
 }
+
+export async function deleteFolder(name: string, refetch: () => void) {
+  const webContainer = await getWebContainerInstance();
+  await webContainer.spawn('rm', ['-rf', name]).then(() => {
+    setTimeout(() => refetch(), 200)
+  })
+}

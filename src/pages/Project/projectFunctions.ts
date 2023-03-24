@@ -23,7 +23,6 @@ export async function startShell(terminalInstance: XTerminal, updateAppUrl: (url
 
   const input = shellProcess.input.getWriter();
   terminalInstance.onData((data) => {
-    console.log(data)
     input.write(data);
   });
   

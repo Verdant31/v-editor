@@ -69,8 +69,6 @@ export async function renameFolder(name: string, newName: string, refetch: () =>
   const webContainer = await getWebContainerInstance();
   const pathWihoutName = name.split('/').slice(0, -1).join('/');
   const formattedNewName = pathWihoutName.length === 0 ? newName : pathWihoutName + '/' + newName;
-  console.log(name)
-  console.log(formattedNewName)
   await webContainer.spawn('mv', [name, formattedNewName]).then(() => {
     setTimeout(() => refetch(), 200)
   })
@@ -81,4 +79,11 @@ export async function deleteFolder(name: string, refetch: () => void) {
   await webContainer.spawn('rm', ['-rf', name]).then(() => {
     setTimeout(() => refetch(), 200)
   })
+}
+
+export async function createFolder(name: string, refetch: () => void) {
+  const webContainer = await getWebContainerInstance();
+  await webContainer.fs.mkdir(name).then(() => {
+    setTimeout(() => refetch(), 200)
+  });
 }

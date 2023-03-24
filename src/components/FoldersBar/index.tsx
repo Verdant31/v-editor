@@ -8,13 +8,14 @@ import { useQuery } from "react-query";
 import { appUrlAtom } from '../../pages/Project/useProject';
 import FolderAccordion from '../FoldersAccordion';
 import FileActionsModal from '../Modals/FileActionsModal';
-import { createFile, getFiles } from "./query";
+import { createFile, createFolder, getFiles } from "./query";
 import { Container } from './sub/Container';
 import { FolderTree } from './sub/FolderTree';
 
 export const foldersWidthAtom = atom(310)
 
 type RootFilesAction = 'newFolder' | 'newFile' | undefined;
+
 export function FoldersBar() {
   const [ currentAction, setCurrentAction ] = useState<RootFilesAction>(undefined);
   const [ isActionFolderModalOpen, setIsActionFolderModalOpen ] = useState(false);
@@ -40,7 +41,12 @@ export function FoldersBar() {
         setIsActionFolderModalOpen(false);
         refetch();
       });
+      return;
     }
+    await createFolder('./' + newValue, refetch).then(() => {
+      setIsActionFolderModalOpen(false);
+    });
+
   }
 
   const handleMenuClick = async (action: RootFilesAction) => {

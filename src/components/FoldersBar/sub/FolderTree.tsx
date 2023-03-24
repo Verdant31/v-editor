@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
 import FileActionsModal from '../../Modals/FileActionsModal';
-import { openFile, renameFile } from '../query';
+import { deleteFolder, openFile, renameFile } from '../query';
 import { FilesContextMenu } from './ContextsMenus/FilesContextMenu';
 import { Folder } from './Folder';
 
@@ -53,6 +53,10 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
     showFilesMenu({event: e, props: path})
   };
 
+  const handleDeleteFile = async (path: string,) => { 
+    await deleteFolder(path, refetch);
+  }
+
   return (
     <div>
       <FileActionsModal 
@@ -60,7 +64,11 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
         isOpen={isRenameFileModalOpen}
         setIsOpen={setIsRenameFileModalOpen}
       />
-      <FilesContextMenu id={fatherFolder} handleStartRenamingProcess={handleStartRenamingProcess} />
+      <FilesContextMenu 
+        id={fatherFolder} 
+        handleDeleteFile={handleDeleteFile}
+        handleStartRenamingProcess={handleStartRenamingProcess} 
+      />
       {Object.keys(folders).map((folder: any) => {
         if(Object.keys(folders[folder]).length === 2 && Object.keys(folders[folder]).includes('name')) {
           const path = `${fatherFolder}/${folders[folder].name}`
@@ -81,7 +89,7 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
         return (
           <Folder
             refetch={refetch}
-            key={folder.name} 
+            key={folder} 
             folder={folders[folder]} 
             folderName={folder} 
             fatherFolder={fatherFolder}  

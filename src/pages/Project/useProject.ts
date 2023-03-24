@@ -14,7 +14,7 @@ export function useProject() {
   const [ appUrl, setAppUrl ] = useAtom(appUrlAtom);
 
   const updateAppUrl = (url: string) => setAppUrl(url);
-  
+
   useEffect(() => {
     if(!terminalInstance) {
       const terminal = new Terminal({

@@ -1,4 +1,5 @@
 import { SicssThree, Sihtml5, Sijavascript, Sinodedotjs, Sireact, Sisvg, Sitypescript } from '@icons-pack/react-simple-icons';
+import { File } from 'phosphor-react';
 
 export const getIconFromExtension = (name: string) => {
   const words = name.split('.');
@@ -27,5 +28,7 @@ export const getIconFromExtension = (name: string) => {
       return <Sitypescript style={{minWidth: 16, height: 16}} size={16} color="#2f74c0" />
     case 'svg':
       return <Sisvg style={{minWidth: 16, height: 16}} size={16} color="#bea500"  />
+    default:
+      return <File size={20} weight="fill" color="#0398e1"/>
   }
 }

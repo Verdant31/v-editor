@@ -93,7 +93,7 @@ export function FoldersBar() {
       >
         {!!appUrl && (
           <div  className="flex h-[100%]" onContextMenu={displayMenu}>
-            <div className="flex p-[10px] items-center flex-col gap-4 h-[100%] bg-[#201B2D]">
+            <div className="flex p-[10px] items-center flex-col pt-[20px] gap-5 h-[100%] bg-[#201B2D]">
               <Files size={32} />
               <MagnifyingGlass size={32} />
             </div>

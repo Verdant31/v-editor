@@ -13,6 +13,6 @@ export const getFolderColor = (folderName: string) => {
     case 'public':
       return '#0284c7';
     default:
-      return '#fff';
+      return '#dbdbdb';
   }
 }

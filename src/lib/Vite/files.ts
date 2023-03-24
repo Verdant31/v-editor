@@ -155,10 +155,29 @@ export const mainTsx = `
   import React from 'react'
   import ReactDOM from 'react-dom/client'
   import './index.css'
-  import App from './App'
+  import { BrowserRouter } from "react-router-dom";
+  import { Router } from "./routes";
+
   ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <App />
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   )
+`
+
+export const routesTsx = `
+import { Route, Routes } from 'react-router-dom';
+import App from '../App';
+
+export function Router() {
+  return (
+    <Routes>
+      <Route path="/" >
+        <Route element={<App />} path="/" />
+      </Route>
+    </Routes>
+  )
+}
 `
 
 export const indexHtml = `
@@ -187,7 +206,8 @@ export const packagejson = `
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "vite-plugin-full-reload": "^1.0.5"
+    "vite-plugin-full-reload": "^1.0.5",
+    "react-router-dom": "^6.8.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

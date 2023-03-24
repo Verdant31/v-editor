@@ -37,8 +37,14 @@ export function useProject() {
     
   }, [terminalInstance])
 
+  const handleRedirect = () => {
+    const iframeEl = document.querySelector('iframe');
+    (iframeEl as HTMLIFrameElement).src = appUrl;
+  }
+
   return {
     appUrl,
     setAppUrl,
+    handleRedirect
   }
 }

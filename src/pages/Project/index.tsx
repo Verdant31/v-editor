@@ -7,7 +7,7 @@ import LoadingProject from './sub/LoadingProject';
 import { useProject } from './useProject';
 
 export function Project() {
-  const { appUrl, setAppUrl } = useProject();
+  const { appUrl, setAppUrl, handleRedirect } = useProject();
   return (
     <div className="w-[100vw] h-[100vh] relative flex flex-col">
       <Topbar />
@@ -16,6 +16,7 @@ export function Project() {
       {!!appUrl && <File />}
       <LoadingProject  />
       <Browser
+        handleRedirect={handleRedirect}
         projectIsRunning={!!appUrl}
         appUrl={appUrl}
         setAppUrl={setAppUrl}

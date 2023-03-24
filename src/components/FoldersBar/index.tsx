@@ -1,7 +1,7 @@
 import { atom, useAtom } from 'jotai';
 import { Files, MagnifyingGlass } from 'phosphor-react';
 import { Resizable } from 're-resizable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
 import { useQuery } from "react-query";
@@ -13,12 +13,15 @@ import { Container } from './sub/Container';
 import { FolderTree } from './sub/FolderTree';
 
 export const foldersWidthAtom = atom(310)
+export const createdFileFromTopbarAtom = atom(false)
 
 type RootFilesAction = 'newFolder' | 'newFile' | undefined;
 
 export function FoldersBar() {
   const [ currentAction, setCurrentAction ] = useState<RootFilesAction>(undefined);
   const [ isActionFolderModalOpen, setIsActionFolderModalOpen ] = useState(false);
+  
+  const [ createdFileFromTopbar, setCreatedFileFromTopbar ] = useAtom(createdFileFromTopbarAtom);
   
   const [ width, setWidth ] = useAtom(foldersWidthAtom);
   const [ appUrl,  ] = useAtom(appUrlAtom);
@@ -48,6 +51,13 @@ export function FoldersBar() {
     });
 
   }
+
+  useEffect(() => {
+    if(createdFileFromTopbar) {
+      refetch()
+      setCreatedFileFromTopbar(false);
+    }
+  }, [createdFileFromTopbar])
 
   const handleMenuClick = async (action: RootFilesAction) => {
     setCurrentAction(action);

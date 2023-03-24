@@ -6,6 +6,8 @@ export const getFolderColor = (folderName: string) => {
       return '#f5d60b';
     case 'src':
       return '#4ade80';
+    case 'routes':
+      return '#35a15c';
     case 'pages':
       return '#b91c1c';
     case 'public':

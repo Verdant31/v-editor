@@ -1,4 +1,4 @@
-import { appCss, appTsx, indexCss, indexHtml, logoSvg, mainTsx, packagejson, tsConfig, viteConfig, viteSvg } from "./files"
+import { appCss, appTsx, indexCss, indexHtml, logoSvg, mainTsx, packagejson, routesTsx, tsConfig, viteConfig, viteSvg } from "./files"
 
 export const viteTree = {
   src: {
@@ -8,6 +8,15 @@ export const viteTree = {
           'react.svg': {
             file: {
               contents: logoSvg
+            },
+          },
+        }
+      },
+      routes: {
+        directory: {
+          'index.tsx': {
+            file: {
+              contents: routesTsx
             },
           },
         }

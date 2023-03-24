@@ -6,14 +6,15 @@ interface BrowserProps {
   projectIsRunning: boolean;
   appUrl: string | undefined;
   setAppUrl: (value: string) => void;
+  handleRedirect: () => void;
 }
 
 export const browserWidthAtom = atom(340)
 
 
-export function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
+export function Browser({ appUrl, projectIsRunning, setAppUrl, handleRedirect }: BrowserProps) {
   const [ width, setWidth ] = useAtom(browserWidthAtom);
-  
+
   return (
     <motion.div 
       className="bg-[#202024] h-[100%] flex absolute right-0"
@@ -37,6 +38,9 @@ export function Browser({ appUrl, projectIsRunning, setAppUrl}: BrowserProps) {
             {projectIsRunning && (
               <input 
                 onChange={(e) => setAppUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if(e.key === "Enter") handleRedirect();
+                }}
                 className="rounded-sm text-gray-200 bg-[#202024] w-full mx-8 h-6 text-sm p-2 outline-none " 
                 value={appUrl} 
               />

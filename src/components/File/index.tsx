@@ -30,7 +30,3 @@ export default function File() {
   )
 }
 
-{/* <div className="mx-auto text-center w-72">
-<h1 className="font-monospace">Your project is all set up, just pick a file and start coding.</h1>
-<h1 className="font-monospace mt-2">Enjoy our editor!</h1>
-</div> */}

@@ -31,7 +31,13 @@ export function Project() {
             top: '24px'
             }}
           >
-          <div className="flex items-center absolute top-0">
+          {openedFiles.length === 0 && (
+            <div className="mx-auto text-center w-72 pt-44">
+              <h1 className="font-monospace">Your project is all set up, just pick a file and start coding.</h1>
+              <h1 className="font-monospace mt-2">Enjoy our editor!</h1>
+            </div> 
+          )}
+          <div className="flex items-center absolute top-0 max-w-[100%] overflow-x-scroll">
             {openedFiles.length > 0 && openedFiles.map(file => (
               <div 
                 key={file.completePath} 

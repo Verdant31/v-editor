@@ -27,7 +27,7 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
     await openFile(fileName).then((res) => {
       if(!res) return;
       setCode(res)
-      setInitialCode(res.code)
+      setInitialCode(res)
     })
   });
 

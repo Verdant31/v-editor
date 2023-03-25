@@ -27,6 +27,7 @@
     "@webcontainer/api": "^1.0.2",
     "ansi-to-html": "^0.7.2",
     "chalk": "^5.2.0",
+    "diff": "^5.1.0",
     "framer-motion": "^10.0.0",
     "highlight.js": "^11.7.0",
     "iframe-resizer-react": "^1.1.0",
@@ -50,6 +51,7 @@
     "xterm-addon-fit": "^0.7.0"
   },
   "devDependencies": {
+    "@types/diff": "^5.0.3",
     "@types/highlight.js": "^10.1.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

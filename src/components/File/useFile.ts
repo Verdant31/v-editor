@@ -1,3 +1,4 @@
+import { diffChars } from 'diff'
 import { atom, useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { getWebContainerInstance } from "../../lib/webContainer"
@@ -13,7 +14,7 @@ type CurrentFile = {
 }
 
 export const currentFileAtom = atom<CurrentFile>({} as CurrentFile);
-export const initialCodeAtom = atom<string>('');
+export const initialCodeAtom = atom<CurrentFile>({} as CurrentFile)
 
 
 export function useFile() {
@@ -28,7 +29,7 @@ export function useFile() {
 
   const handleCloseFile = () => {
     setCurrentFile({} as CurrentFile);
-    setInitialCode('');
+    setInitialCode({} as CurrentFile);
     setCodeIsDirty(false);
   }
 
@@ -45,8 +46,10 @@ export function useFile() {
   }, [codeIsDirty, currentFile.code]);
 
   useEffect(() => {
-    if(currentFile.code && currentFile.code.length > 0 && currentFile.code !== initialCode) {
-      setCodeIsDirty(true);
+    if(currentFile.code && currentFile.code.length > 0) {
+      const diff = diffChars(initialCode.code, currentFile.code);
+      const hasDiff = diff.some((part) => part.added || part.removed);
+      setCodeIsDirty(hasDiff);
     }
   }, [currentFile.code])
 

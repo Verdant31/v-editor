@@ -26,7 +26,7 @@ export function useFile() {
         setOpenedFiles(prev => {
           const fileIndex = prev.findIndex(file => file.completePath === currentFile.completePath);
           const newFiles = [...prev];
-          newFiles[fileIndex] = {...newFiles[fileIndex], isDirty: false, unsaved: false};
+          newFiles[fileIndex] = {...newFiles[fileIndex], isDirty: false, unsaved: false, initialCode: currentFile.code};
           return newFiles;
         })
         saveFile(currentFile.completePath, currentFile.code);
@@ -42,6 +42,7 @@ export function useFile() {
     const codesExists = currentFile.code && currentFile.initialCode;
     const codesAreNotEmpty = codesExists && currentFile.code.length > 0 && currentFile.initialCode.length > 0;
     const codesAreDifferent = codesAreNotEmpty && currentFile.code.replace(/\s/g, "") !== currentFile.initialCode.replace(/\s/g, "");
+
     
     if(codesAreDifferent) {
       setOpenedFiles(prev => {

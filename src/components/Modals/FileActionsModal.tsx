@@ -51,6 +51,7 @@ export default function FileActionsModal({
                   onKeyDown={(e) => {
                     if (e.key !== 'Enter') return
                     handleAction(value);
+                    setValue('');
                   }}
                 />
               </Dialog.Panel>

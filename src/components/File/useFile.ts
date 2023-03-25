@@ -38,11 +38,10 @@ export function useFile() {
 
   useEffect(() => {
     if(!currentFile) return;
+    const formattedCurrentFileCode = currentFile.code.length > 0 ? currentFile.code.replace(/\s/g, "") : currentFile.code;
+    const formattedInitialCode = currentFile.initialCode.length > 0 ? currentFile.initialCode.replace(/\s/g, "") : currentFile.initialCode;
 
-    const codesExists = currentFile.code && currentFile.initialCode;
-    const codesAreNotEmpty = codesExists && currentFile.code.length > 0 && currentFile.initialCode.length > 0;
-    const codesAreDifferent = codesAreNotEmpty && currentFile.code.replace(/\s/g, "") !== currentFile.initialCode.replace(/\s/g, "");
-
+    const codesAreDifferent = formattedCurrentFileCode !== formattedInitialCode;
     
     if(codesAreDifferent) {
       setOpenedFiles(prev => {

@@ -87,3 +87,12 @@ export async function createFolder(name: string, refetch: () => void) {
     setTimeout(() => refetch(), 200)
   });
 }
+
+export const saveFile = async (path: string, content: string) => {
+  const webContainer = await getWebContainerInstance();
+  try {
+    await webContainer.fs.writeFile(path, content);
+  } catch (error) {
+    console.log(error);
+  }
+}

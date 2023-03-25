@@ -1,76 +1,69 @@
-import { diffChars } from 'diff'
-import { atom, useAtom } from 'jotai'
-import { useEffect, useState } from 'react'
-import { getWebContainerInstance } from "../../lib/webContainer"
-import { browserWidthAtom } from "../Browser"
-import { foldersWidthAtom } from "../FoldersBar"
-import { terminalHeightAtom } from "../Terminal/useTerminal"
+import { atom, useAtom } from 'jotai';
+import { useEffect } from 'react';
+import { openedFilesAtom } from '../../pages/Project/useProject';
+import { saveFile } from '../FoldersBar/query';
 
-type CurrentFile = {
+export type CurrentFile = {
   code: string;
   extension: string | undefined;
   name: string;
   completePath: string;
 }
 
-export const currentFileAtom = atom<CurrentFile>({} as CurrentFile);
 export const initialCodeAtom = atom<CurrentFile>({} as CurrentFile)
 
-
 export function useFile() {
-  const [ codeIsDirty, setCodeIsDirty ] = useState(false);
-
-  const [ terminalHeight,  ] = useAtom(terminalHeightAtom);
-  const [ browserWidth,  ] = useAtom(browserWidthAtom);
-  const [ foldersWidth,  ] = useAtom(foldersWidthAtom);
-    
-  const [ currentFile, setCurrentFile ] = useAtom(currentFileAtom);
-  const [ initialCode, setInitialCode  ] = useAtom(initialCodeAtom);
-
-  const handleCloseFile = () => {
-    setCurrentFile({} as CurrentFile);
-    setInitialCode({} as CurrentFile);
-    setCodeIsDirty(false);
-  }
+  const [ openedFiles, setOpenedFiles ] = useAtom(openedFilesAtom);
+  
+  const currentFile = openedFiles.find(file => file.isCurrent);
 
   useEffect(() => {
+    if(!currentFile) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === 's') {
         event.preventDefault();
-        setCodeIsDirty(false);
+        setOpenedFiles(prev => {
+          const fileIndex = prev.findIndex(file => file.completePath === currentFile.completePath);
+          const newFiles = [...prev];
+          newFiles[fileIndex] = {...newFiles[fileIndex], isDirty: false, unsaved: false};
+          return newFiles;
+        })
         saveFile(currentFile.completePath, currentFile.code);
       }
     }
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [codeIsDirty, currentFile.code]);
+  }, [currentFile?.code]);
 
   useEffect(() => {
-    if(currentFile.code && currentFile.code.length > 0) {
-      const diff = diffChars(initialCode.code, currentFile.code);
-      const hasDiff = diff.some((part) => part.added || part.removed);
-      setCodeIsDirty(hasDiff);
+    if(!currentFile) return;
+
+    const codesExists = currentFile.code && currentFile.initialCode;
+    const codesAreNotEmpty = codesExists && currentFile.code.length > 0 && currentFile.initialCode.length > 0;
+    const codesAreDifferent = codesAreNotEmpty && currentFile.code.replace(/\s/g, "") !== currentFile.initialCode.replace(/\s/g, "");
+    
+    if(codesAreDifferent) {
+      setOpenedFiles(prev => {
+        const fileIndex = prev.findIndex(file => file.completePath === currentFile.completePath);
+        const newFiles = [...prev];
+        newFiles[fileIndex] = {...newFiles[fileIndex], isDirty: true, unsaved: true};
+        return newFiles;
+      })
+    }else {
+      setOpenedFiles(prev => {
+        const fileIndex = prev.findIndex(file => file.completePath === currentFile.completePath);
+        const newFiles = [...prev];
+        newFiles[fileIndex] = {...newFiles[fileIndex], isDirty: false};
+        return newFiles;
+      })
     }
-  }, [currentFile.code])
+  }, [currentFile?.code])
 
   return {
     currentFile,
-    setCurrentFile,
-    handleCloseFile,
-    codeIsDirty,
-    terminalHeight,
-    browserWidth,
-    foldersWidth,
-    setCodeIsDirty
+    setOpenedFiles,
+    openedFiles
   }
 
-}
-
-export const saveFile = async (path: string, content: string) => {
-  const webContainer = await getWebContainerInstance();
-  try {
-    await webContainer.fs.writeFile(path, content);
-  } catch (error) {
-    console.log(error);
-  }
 }

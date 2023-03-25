@@ -2,8 +2,8 @@ import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { useContextMenu } from 'react-contexify';
 import { useMutation } from 'react-query';
+import { openedFilesAtom } from '../../../pages/Project/useProject';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
-import { currentFileAtom, initialCodeAtom } from '../../File/useFile';
 import FileActionsModal from '../../Modals/FileActionsModal';
 import { deleteFolder, openFile, renameFile } from '../query';
 import { FilesContextMenu } from './ContextsMenus/FilesContextMenu';
@@ -16,23 +16,35 @@ interface FolderTreeProps {
 }
 
 export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) {
-  const [ , setCode ] = useAtom(currentFileAtom);
-  const [ , setInitialCode ] = useAtom(initialCodeAtom);
   const [ isRenameFileModalOpen, setIsRenameFileModalOpen ] = useState(false);
   const [ currentRenamingFile, setCurrentRenamingFile ] = useState<string>();
-  
+  const [ openedFiles, setOpenedFiles ] = useAtom(openedFilesAtom);
+
   const { show: showFilesMenu } = useContextMenu({id: fatherFolder});
 
   const openFileMutation = useMutation(async (fileName: string) => {
     await openFile(fileName).then((res) => {
       if(!res) return;
-      setCode(res)
-      setInitialCode(res)
+      if(openFile.length === 0) {
+        setOpenedFiles([{...res, isCurrent: true, isDirty: false, initialCode: res.code}])
+      }else {
+        const isFileAlreadyOpened = openedFiles.find((file) => file.completePath === res.completePath);
+        if(isFileAlreadyOpened) {
+          setOpenedFiles(openedFiles.map((file) => {
+            if(file.completePath === res.completePath) {
+              return {...file, isCurrent: true}
+            }
+            return {...file, isCurrent: false}
+          }))
+        }else {
+          setOpenedFiles([...openedFiles, {...res, isCurrent: true, isDirty: false, initialCode: res.code}])
+        }
+      }
     })
   });
 
   const handleOpenFile = (fileName: string) => {
-    openFileMutation.mutateAsync(fileName)
+    openFileMutation.mutateAsync(fileName);
   }
 
   const handlerRenameFile = async (newName: string) => {

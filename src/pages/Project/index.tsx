@@ -35,7 +35,8 @@ export function Project() {
             {openedFiles.length > 0 && openedFiles.map(file => (
               <div 
                 key={file.completePath} 
-                className="pt-2 px-6 flex items-center gap-2 mb-2 cursor-pointer"
+                className="pt-2 px-6 flex items-center gap-2 pb-[4px]"
+                style={{ backgroundColor: file.isCurrent ? '#201B2D' : 'transparent'}}
                 onClick={() => {
                   const newFiles = openedFiles.map(openedFile => {
                     if (openedFile.completePath === file.completePath) {
@@ -54,7 +55,20 @@ export function Project() {
               >
                 {file.isDirty && <Circle color="#f472b6" size={16} weight="fill" />}
                 <p className="font-monospace text-zinc-300">{file.name}</p> 
-                <X className="cursor-pointer" size={16} /> 
+                <X 
+                  className="cursor-pointer z-50" size={16} 
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    const newFiles = openedFiles.filter(openedFile => openedFile.completePath !== file.completePath)
+                    if (file.isCurrent && newFiles.length > 0) {
+                      newFiles[newFiles.length - 1] = {
+                        ...newFiles[newFiles.length - 1],
+                        isCurrent: true,
+                      }
+                    }
+                    setOpenedFiles(newFiles)
+                  }}
+                /> 
               </div>
             ))}   
           </div>

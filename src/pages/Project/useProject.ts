@@ -15,13 +15,10 @@ export interface OpenedFile extends CurrentFile {
 export const terminalAtom = atom<Terminal | null>(null);
 export const appUrlAtom = atom<string>('');
 export const openedFilesAtom = atom<OpenedFile[]>([])
-export const currentFileAtom = atom<CurrentFile>({} as CurrentFile);
 
 const fitAddon = new FitAddon();
 
 export function useProject() {
-  const [ currentFile, setCurrentFile ] = useAtom(currentFileAtom);
-
   const [ openedFiles, setOpenedFiles ] = useAtom(openedFilesAtom);
   const [ terminalInstance, setTerminalInstance ] = useAtom(terminalAtom);
   const [ appUrl, setAppUrl ] = useAtom(appUrlAtom);
@@ -61,7 +58,5 @@ export function useProject() {
     handleRedirect,
     openedFiles,
     setOpenedFiles,
-    currentFile,
-    setCurrentFile,
   }
 }

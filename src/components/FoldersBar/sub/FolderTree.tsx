@@ -37,7 +37,10 @@ export function FolderTree({folders, fatherFolder, refetch } : FolderTreeProps) 
             return {...file, isCurrent: false}
           }))
         }else {
-          setOpenedFiles([...openedFiles, {...res, isCurrent: true, isDirty: false, initialCode: res.code}])
+          const setAllFilesAsNotCurrent = openedFiles.map((file) => {
+            return {...file, isCurrent: false}
+          })
+          setOpenedFiles([...setAllFilesAsNotCurrent, {...res, isCurrent: true, isDirty: false, initialCode: res.code}])
         }
       }
     })

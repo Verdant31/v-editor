@@ -32,7 +32,7 @@ export function Project() {
             }}
           >
           {openedFiles.length === 0 && (
-            <div className="mx-auto text-center w-72 pt-44">
+            <div className="mx-auto text-center w-72 ">
               <h1 className="font-monospace">Your project is all set up, just pick a file and start coding.</h1>
               <h1 className="font-monospace mt-2">Enjoy our editor!</h1>
             </div> 
@@ -78,7 +78,9 @@ export function Project() {
               </div>
             ))}   
           </div>
-          <File />
+          {!(openedFiles.length === 0 )&& (
+            <File />
+          )}
         </div>
       )
       }

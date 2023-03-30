@@ -25,11 +25,10 @@ export function Browser({ appUrl, projectIsRunning, setAppUrl, handleRedirect }:
     >
         <Resizable
           maxWidth={700}
+          minWidth={340}
           size={{width,height: '100%', }}
           enable={{left: true}}
           onResize={(e, direction, ref, d) => {
-            if(ref.offsetWidth < 320) return setWidth(340);
-            if(ref.offsetWidth > 700) return setWidth(700);
             setWidth(ref.offsetWidth)
           }}
           className="border-l-[10px] border-[#13111B]"

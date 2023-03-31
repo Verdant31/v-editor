@@ -4,9 +4,9 @@ import { Folder } from 'phosphor-react';
 import { useState } from 'react';
 import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
-import { getFolderColor } from '../../utils/getFolderColor';
-import { createFile, createFolder, deleteFolder, renameFolder } from '../FoldersBar/query';
-import FileActionsModal from '../Modals/FileActionsModal';
+import { getFolderColor } from '../utils/getFolderColor';
+import { createFile, createFolder, deleteFolder, renameFolder } from './FoldersBar/query';
+import FileActionsModal from './Modals/FileActionsModal';
 
 interface FolderAccordionProps {
   title: string;

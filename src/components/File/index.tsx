@@ -1,5 +1,4 @@
 import CodeEditor from '@uiw/react-textarea-code-editor';
-import './styles.css';
 import { useFile } from './useFile';
 
 export default function File() {

@@ -1,13 +1,17 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Title } from './components/Title';
 
 export default function Home() {
   const [ animationHasEnded, setAnimationHasEnded ] = useState(false);
   const navigate = useNavigate();
+
   return (
     <main className="flex flex-col justify-center items-center mt-24">
+      <ToastContainer autoClose={2000} />
       <Title updateAnimationStatus={setAnimationHasEnded} />
       {animationHasEnded && (
         <motion.div 

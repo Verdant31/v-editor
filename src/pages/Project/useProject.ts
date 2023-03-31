@@ -2,7 +2,10 @@ import { atom, useAtom } from 'jotai';
 import { useEffect } from "react";
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
+import { browserWidthAtom } from '../../components/Browser';
 import { CurrentFile } from '../../components/File/useFile';
+import { foldersWidthAtom } from '../../components/FoldersBar';
+import { terminalHeightAtom } from '../../components/Terminal/useTerminal';
 import { startShell } from './projectFunctions';
 
 export interface OpenedFile extends CurrentFile {
@@ -22,8 +25,12 @@ export function useProject() {
   const [ openedFiles, setOpenedFiles ] = useAtom(openedFilesAtom);
   const [ terminalInstance, setTerminalInstance ] = useAtom(terminalAtom);
   const [ appUrl, setAppUrl ] = useAtom(appUrlAtom);
+  const [ terminalHeight,  ] = useAtom(terminalHeightAtom);
+  const [ browserWidth,  ] = useAtom(browserWidthAtom);
+  const [ foldersWidth,  ] = useAtom(foldersWidthAtom);
 
   const updateAppUrl = (url: string) => setAppUrl(url);
+
 
   useEffect(() => {
     if(!terminalInstance) {
@@ -58,5 +65,8 @@ export function useProject() {
     handleRedirect,
     openedFiles,
     setOpenedFiles,
+    terminalHeight,
+    browserWidth,
+    foldersWidth,
   }
 }

@@ -1,20 +1,23 @@
-import { useAtom } from 'jotai';
 import { Circle, X } from 'phosphor-react';
-import { Browser, browserWidthAtom } from '../../components/Browser';
+import { Browser } from '../../components/Browser';
 import File from '../../components/File';
-import { FoldersBar, foldersWidthAtom } from '../../components/FoldersBar';
+import { FoldersBar } from '../../components/FoldersBar';
 import { Terminal } from '../../components/Terminal';
-import { terminalHeightAtom } from '../../components/Terminal/useTerminal';
 import Topbar from '../../components/Topbar';
 import LoadingProject from './sub/LoadingProject';
 import { useProject } from './useProject';
 
 export function Project() {
-  const { appUrl, setAppUrl, handleRedirect, openedFiles, setOpenedFiles } = useProject();
-
-  const [ terminalHeight,  ] = useAtom(terminalHeightAtom);
-  const [ browserWidth,  ] = useAtom(browserWidthAtom);
-  const [ foldersWidth,  ] = useAtom(foldersWidthAtom);
+  const { 
+    appUrl, 
+    setAppUrl, 
+    handleRedirect, 
+    openedFiles, 
+    setOpenedFiles,
+    browserWidth,
+    foldersWidth,
+    terminalHeight,
+  } = useProject();
 
   return (
     <div className="w-[100vw] h-[100vh] relative flex flex-col">

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { useContextMenu } from 'react-contexify';
 import { useMutation } from 'react-query';
 import { openedFilesAtom } from '../../../pages/Project/useProject';
+import { deleteFolder, openFile, renameFile } from '../../../services/queries/folders';
 import { getIconFromExtension } from '../../../utils/getIconFromExtension';
 import FileActionsModal from '../../Modals/FileActionsModal';
-import { deleteFolder, openFile, renameFile } from '../query';
 import { FilesContextMenu } from './ContextsMenus/FilesContextMenu';
 import { Folder } from './Folder';
 

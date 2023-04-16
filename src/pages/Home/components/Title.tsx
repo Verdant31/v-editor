@@ -4,12 +4,13 @@ import './style.css';
 
 interface TitleProps {
   updateAnimationStatus: React.Dispatch<React.SetStateAction<boolean>>;
+  userName: string;
 }
 
-export function Title({ updateAnimationStatus }: TitleProps) {
+export function Title({ updateAnimationStatus, userName}: TitleProps) {
   const [ showName, setShowName ] = useState(false);
   const title = "V-Editor."
-  const subTitle = "Hi stranger, and welcome to...";
+  const subTitle = `Hi ${userName}, and welcome to...`;
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -52,3 +53,4 @@ export function Title({ updateAnimationStatus }: TitleProps) {
     </div>
   )
 }
+

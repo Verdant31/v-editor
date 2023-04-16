@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { useAtom } from 'jotai';
 import { useState } from 'react';
+import { createFile } from '../services/queries/folders';
 import { createdFileFromTopbarAtom } from './FoldersBar';
-import { createFile } from './FoldersBar/query';
 import FileActionsModal from './Modals/FileActionsModal';
 
 export default function Topbar() {

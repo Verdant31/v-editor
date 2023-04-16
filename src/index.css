@@ -6,6 +6,15 @@
   --contexify-activeItem-bgColor: #6037bf;
 }
 
+@layer components {
+  .allcenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+}
+
 @layer base {
   * {
     margin: 0;

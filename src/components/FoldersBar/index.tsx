@@ -6,9 +6,9 @@ import { Item, Menu, Separator, useContextMenu } from 'react-contexify';
 import "react-contexify/dist/ReactContexify.css";
 import { useQuery } from "react-query";
 import { appUrlAtom } from '../../pages/Project/useProject';
+import { createFile, createFolder, getFiles } from "../../services/queries/folders";
 import FolderAccordion from '../FoldersAccordion';
 import FileActionsModal from '../Modals/FileActionsModal';
-import { createFile, createFolder, getFiles } from "./query";
 import { Container } from './sub/Container';
 import { FolderTree } from './sub/FolderTree';
 

@@ -1,7 +1,7 @@
 import { atom, useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { openedFilesAtom } from '../../pages/Project/useProject';
-import { saveFile } from '../FoldersBar/query';
+import { saveFile } from '../../services/queries/folders';
 
 export type CurrentFile = {
   code: string;
